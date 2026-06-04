@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>İş Güvenliği Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; overflow: hidden; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
+        .hidden { display: none !important; }
+        .option-btn:disabled { cursor: not-allowed; }
+        .selected-option { border-color: #2563eb !important; background-color: #eff6ff !important; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1) !important; color: #1e3a8a !important; }
+        .correct-answer { background-color: #22c55e !important; color: white !important; border-color: #22c55e !important; box-shadow: none !important; }
+        .wrong-answer { background-color: #ef4444 !important; color: white !important; border-color: #ef4444 !important; box-shadow: none !important; opacity: 0.8; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center h-[100dvh] w-full text-slate-800 m-0 p-0 sm:p-4 bg-gradient-to-br from-slate-100 to-slate-200">
+
+    <div id="app" class="w-full h-full sm:h-[95vh] max-w-xl bg-white sm:rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden relative">
+        
+        <div class="bg-gradient-to-r from-orange-700 to-amber-600 text-white py-2 px-4 text-center shrink-0 shadow-sm z-10">
+            <h1 class="text-lg font-extrabold tracking-tight leading-tight">OYAK HORSE</h1>
+            <p id="header-subtitle" class="text-amber-100 text-[10px] font-bold tracking-[0.2em] opacity-90 uppercase leading-tight">İş Güvenliği Testi</p>
+        </div>
+
+        <div class="p-3 sm:p-5 flex-grow flex flex-col bg-slate-50/50 min-h-0">
+            <div id="screen-login" class="flex flex-col justify-center h-full max-w-sm mx-auto w-full overflow-y-auto">
+                <div class="text-center mb-6">
+                    <h2 class="text-lg font-bold text-slate-800 mb-1">Sisteme Giriş</h2>
+                    <p class="text-xs text-slate-500">Teste başlamak için bilgilerinizi giriniz.</p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="user-name">Ad Soyad</label>
+                    <input type="text" id="user-name" class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 bg-white focus:outline-none focus:border-orange-600 transition-colors text-sm font-medium shadow-sm" placeholder="Tam adınızı giriniz">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="user-dept">Departman</label>
+                    <div class="relative">
+                        <select id="user-dept" class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 bg-white focus:outline-none focus:border-orange-600 transition-colors text-sm font-medium shadow-sm appearance-none">
+                            <option value="">Seçim Yapınız</option>
+                            <option value="HSE">İş Sağlığı Güvenliği ve Çevre</option>
+                            <option value="Dökümhane">Dökümhane</option>
+                            <option value="Motor">Motor</option>
+                            <option value="Bakım/Bileme Atölyesi">Bakım</option>
+                            <option value="Vites Kutusu">Vites Kutusu</option>
+                            <option value="Lojistik">Lojistik</option>
+                            <option value="Kalite">Kalite</option>
+                            <option value="Ar-Ge">Ar-Ge</option>
+                            <option value="Mühendislik">Mühendislik</option>
+                            <option value="İnsan Kaynakları">İnsan Kaynakları</option>
+                            <option value="Finans/Muhasebe">Finans/Muhasebe</option>
+                            <option value="IT">IT</option>
+                            <option value="Satınalma">Satınalma</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                <div id="login-error" class="text-red-500 text-xs mb-4 hidden font-semibold text-center bg-red-50 p-2 rounded-lg border border-red-100">Lütfen tüm alanları doldurunuz.</div>
+                <div class="space-y-2 mt-auto">
+                    <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-orange-700 to-amber-600 text-white font-bold py-3.5 rounded-xl shadow-lg text-sm">Teste Başla</button>
+                    <button onclick="showStats()" class="w-full bg-white border-2 border-slate-200 text-slate-600 font-bold py-3.5 rounded-xl text-sm">İstatistikler</button>
+                </div>
+            </div>
+
+            <div id="screen-quiz" class="hidden flex flex-col h-full justify-between">
+                <div class="shrink-0 mb-1">
+                    <div class="flex justify-between items-center mb-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+                        <span id="question-counter" class="bg-white px-2 py-0.5 rounded-full shadow-sm border border-slate-100"></span>
+                        <span id="score-display" class="bg-white px-2 py-0.5 rounded-full shadow-sm border border-slate-100 text-orange-700"></span>
+                    </div>
+                    <div class="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="bg-orange-600 h-full rounded-full transition-all duration-500 ease-out"></div>
+                    </div>
+                </div>
+
+                <h2 id="question-text" class="text-sm sm:text-base font-bold my-3 text-center text-slate-800 leading-snug shrink-0 px-1"></h2>
+                
+                <div id="options-container" class="grid grid-cols-1 gap-2 w-full shrink-0"></div>
+                
+                <div class="mt-auto pt-2 shrink-0">
+                    <button id="confirm-btn" onclick="confirmAnswer()" class="hidden w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Cevabı Onayla</button>
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Sıradaki Soru</button>
+                </div>
+            </div>
+
+            <div id="screen-result" class="hidden text-center flex flex-col justify-center h-full">
+                <div class="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-1">Test Tamamlandı</h2>
+                <div class="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-orange-700 to-amber-500 my-4 drop-shadow-sm" id="final-score"></div>
+                <p id="result-message" class="mb-6 text-slate-600 font-medium text-sm px-2"></p>
+                <div class="flex flex-col gap-2 mt-auto max-w-sm mx-auto w-full">
+                    <button onclick="showStats()" class="bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm">Verileri Görüntüle</button>
+                    <button onclick="appReset()" class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-sm">Yeni Katılımcı</button>
+                </div>
+            </div>
+
+            <div id="screen-stats" class="hidden flex flex-col h-full">
+                <div class="flex items-center justify-between mb-2 border-b border-slate-200 pb-2 shrink-0">
+                    <h2 class="text-base font-extrabold text-slate-800">İstatistikler</h2>
+                    <button onclick="appReset()" class="text-slate-400 hover:text-slate-700 font-bold bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-xs">Kapat</button>
+                </div>
+                <div id="loading-container" class="hidden flex-col items-center justify-center py-6 shrink-0">
+                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-700 mb-2"></div>
+                    <p id="loading-text" class="text-xs font-medium text-slate-500">Veriler sunucudan çekiliyor...</p>
+                </div>
+                <div class="flex gap-2 mb-2 shrink-0 flex-row">
+                    <div class="relative w-full">
+                        <select id="filter-month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-orange-600 bg-white font-medium shadow-sm appearance-none" onchange="renderStatsTable()">
+                            <option value="">Tüm Aylar</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500"><svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg></div>
+                    </div>
+                    <div class="relative w-full">
+                        <select id="filter-dept" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-orange-600 bg-white font-medium shadow-sm appearance-none" onchange="renderStatsTable()">
+                            <option value="">Tüm Departmanlar</option>
+                            <option value="HSE">İş Sağlığı Güvenliği ve Çevre</option>
+                            <option value="Dökümhane">Dökümhane</option>
+                            <option value="Motor">Motor</option>
+                            <option value="Bakım/Bileme Atölyesi">Bakım</option>
+                            <option value="Vites Kutusu">Vites Kutusu</option>
+                            <option value="Lojistik">Lojistik</option>
+                            <option value="Kalite">Kalite</option>
+                            <option value="Ar-Ge">Ar-Ge</option>
+                            <option value="Mühendislik">Mühendislik</option>
+                            <option value="İnsan Kaynakları">İnsan Kaynakları</option>
+                            <option value="Finans/Muhasebe">Finans/Muhasebe</option>
+                            <option value="IT">IT</option>
+                            <option value="Satınalma">Satınalma</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500"><svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg></div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm mb-2 shrink-0 overflow-y-auto max-h-[20vh]">
+                    <table class="w-full text-[10px] sm:text-xs">
+                        <thead class="bg-slate-50 border-b border-slate-200 sticky top-0"><tr class="text-slate-500 text-left uppercase tracking-wider font-bold"><th class="p-2">Birim</th><th class="p-2">Katılımcı</th><th class="p-2 text-right">Ort</th></tr></thead>
+                        <tbody id="dept-stats-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-grow overflow-hidden flex flex-col min-h-0">
+                    <div class="overflow-y-auto flex-grow">
+                        <table class="w-full text-[10px] sm:text-xs">
+                            <thead class="bg-slate-50 border-b border-slate-200 sticky top-0 z-10"><tr class="text-slate-500 text-left uppercase tracking-wider font-bold"><th class="p-2">İsim</th><th class="p-2">Birim</th><th class="p-2 text-right">Skor</th><th class="p-2 text-right">Tarih</th></tr></thead>
+                            <tbody id="user-stats-body" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="mt-2 flex flex-col gap-1.5 shrink-0 pt-2 border-t border-slate-200">
+                    <button onclick="exportData()" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl shadow-md text-xs flex items-center justify-center gap-2">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> CSV İndir
+                    </button>
+                    <button onclick="clearAllData()" class="text-red-500 font-semibold text-[10px] py-1.5">Sıfırla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "https://script.google.com/macros/s/AKfycbyzEzRZbe8PI27krTyl0GiVB6XZ9DDe2B7IcY4jbw3wVlRP2JTOPCXwZ30uI9jNG3lJ/exec";
+        const soruHavuzu = [
+            { question: "Atölyede yerde yağ/sıvı birikintisi gördünüz. İlk yapılması gereken nedir? / You see an oil/liquid spill on the floor in the workshop. What is the first thing to do?", options: ["Görmezden gelip işe devam etmek / Ignore it and continue working", "Alanı işaretleyip yetkiliye/temizliğe haber vermek / Mark the area and notify the supervisor/cleaning", "Üzerine basarak geçmek / Step over it", "Vardiya sonunda raporlamak / Report at end of shift"], correctAnswer: 1 },
+            { question: "Elektrik panosu kaynaklı bir yangında hangi söndürücü kullanılmalıdır? / Which extinguisher should be used in an electrical panel fire?", options: ["Su / Water", "Köpük / Foam", "Kuru Kimyevi Toz veya CO2 / Dry Chemical Powder or CO2", "Kum / Sand"], correctAnswer: 2 },
+            { question: "Baret (kask) hangi durumda takılmalıdır? / When should a hard hat be worn?", options: ["Sadece denetim varken / Only during inspections", "Düşen cisim/çarpma riski olan tüm alanlarda / In all areas with falling object/impact risk", "Sadece dışarıda / Only outdoors", "İstek dışı bir zorunluluk yoktur / It is not mandatory"], correctAnswer: 1 },
+            { question: "1,5 metre ve üzeri yükseklikte düşme riski olan işlerde ne kullanılır? / What is used for work with fall risk at 1.5 m and above?", options: ["İş eldiveni / Work gloves", "Tam vücut emniyet kemeri / Full body safety harness", "Yelek / Vest", "Bone / Hairnet"], correctAnswer: 1 },
+            { question: "Bir kimyasalla çalışmadan önce hangi belgeye bakılmalıdır? / Which document should be checked before working with a chemical?", options: ["Bakım talimatı / Maintenance manual", "Güvenlik Bilgi Formu (GBF/SDS) / Safety Data Sheet (SDS)", "Üretim planı / Production plan", "İzin formu / Leave form"], correctAnswer: 1 },
+            { question: "Bakım/onarım sırasında makinenin enerjisini kesip kilitleme-etiketleme yöntemine ne ad verilir? / What is the lockout-tagout method during maintenance called?", options: ["LOTO (Kilitle-Etiketle) / LOTO (Lockout-Tagout)", "5S", "Kaizen", "TPM"], correctAnswer: 0 },
+            { question: "Dönen/hareketli makine parçalarında koruyucu (muhafaza) sökülmüşse ne yapılır? / What to do if the guard on rotating/moving machine parts is removed?", options: ["Dikkatli çalışılır / Work carefully", "Makine çalıştırılmaz, durum bildirilir / Do not operate, report it", "Hızlı çalışılır / Work fast", "Eldivenle çalışılır / Work with gloves"], correctAnswer: 1 },
+            { question: "Forklift çalışan bir alanda yaya olarak ne yapılmalıdır? / As a pedestrian in a forklift area, what should you do?", options: ["Forkliftin önünden geçmek / Cross in front of the forklift", "Yaya yollarını kullanıp göz teması kurmak / Use pedestrian paths and make eye contact", "Forklifte yaklaşmak / Approach the forklift", "Çatala basıp geçmek / Step on the fork"], correctAnswer: 1 },
+            { question: "Yüksek gürültülü ortamda hangi KKD kullanılır? / Which PPE is used in a high-noise environment?", options: ["Toz maskesi / Dust mask", "Kulak tıkacı/kulaklık / Earplugs/earmuffs", "Gözlük / Goggles", "Eldiven / Gloves"], correctAnswer: 1 },
+            { question: "Ağır bir yükü elle kaldırırken doğru teknik nedir? / What is the correct technique for manually lifting a heavy load?", options: ["Belden eğilerek / Bending from the waist", "Dizleri bükerek, sırtı dik tutarak / Bending the knees, keeping the back straight", "Tek elle / With one hand", "Koşarak / While running"], correctAnswer: 1 },
+            { question: "Güvenlik işaretlerinde KIRMIZI renk neyi ifade eder? / What does the color RED mean in safety signs?", options: ["Bilgi / Information", "Yasak veya yangın ekipmanı / Prohibition or fire equipment", "Zorunluluk / Mandatory", "Güvenli durum / Safe condition"], correctAnswer: 1 },
+            { question: "Kaynak, kesme gibi kıvılcım/alev oluşturan işler için ne gereklidir? / What is required for spark/flame-producing work such as welding, cutting?", options: ["Sıcak İş İzni / Hot Work Permit", "Vardiya planı / Shift plan", "Üretim emri / Production order", "Hiçbir şey / Nothing"], correctAnswer: 0 },
+            { question: "Tank, depo gibi kapalı/dar alana girmeden önce ne yapılır? / Before entering a confined space such as a tank/silo, what is done?", options: ["Doğrudan girilir / Enter directly", "Gaz ölçümü ve girme izni alınır / Gas measurement and entry permit obtained", "Telefonla haber verilir / Notify by phone", "Maske takılır / Just wear a mask"], correctAnswer: 1 },
+            { question: "Bir iş kazası veya ramak kala olayında doğru davranış nedir? / What is the correct behavior in a work accident or near-miss event?", options: ["Saklamak / Hide it", "Derhal amire ve İSG birimine bildirmek / Immediately report to supervisor and HSE", "Kendi çözmek / Fix it alone", "Gün sonunda yazmak / Write it at end of day"], correctAnswer: 1 },
+            { question: "Acil durum tahliyesinde nereye gidilir? / Where do you go during an emergency evacuation?", options: ["Otoparka / To the parking lot", "Acil durum toplanma alanına / To the emergency assembly point", "Yemekhaneye / To the canteen", "Eve / Home"], correctAnswer: 1 },
+            { question: "Acil çıkış kapıları ve yolları nasıl olmalıdır? / How should emergency exit doors and routes be?", options: ["Kilitli / Locked", "Malzeme ile dolu / Blocked with materials", "Her zaman açık ve engelsiz / Always open and unobstructed", "Sadece denetimde açık / Open only during inspections"], correctAnswer: 2 },
+            { question: "El aletleriyle çalışırken hasarlı/arızalı bir alet fark ederseniz ne yaparsınız? / If you notice a damaged/faulty hand tool, what do you do?", options: ["Yine de kullanırım / Use it anyway", "Kullanım dışı bırakıp bildiririm / Remove from use and report", "Bantlayıp kullanırım / Tape it and use", "Başkasına veririm / Give it to someone else"], correctAnswer: 1 },
+            { question: "Talaşlı imalat/torna tezgahında hangi KKD kesinlikle takılMAZ? / Which PPE must NOT be worn at a lathe/machining bench?", options: ["Koruyucu gözlük / Safety glasses", "Eldiven (dönen parça riski) / Gloves (rotating part risk)", "İş ayakkabısı / Safety shoes", "İş elbisesi / Work clothes"], correctAnswer: 1 },
+            { question: "Kimyasal sıçraması durumunda göz için kullanılan acil ekipman nedir? / What is the emergency equipment for the eyes in case of chemical splash?", options: ["Göz duşu / Eye wash station", "İlk yardım çantası / First aid kit", "Yangın tüpü / Fire extinguisher", "Lavabo / Sink"], correctAnswer: 0 },
+            { question: "İş ayakkabısının (çelik burunlu) temel amacı nedir? / What is the main purpose of safety shoes (steel toe)?", options: ["Şıklık / Style", "Ezilme ve delinmeye karşı ayak koruması / Foot protection against crushing and puncture", "Rahatlık / Comfort only", "Soğuk koruması / Cold protection"], correctAnswer: 1 },
+            { question: "Basınçlı gaz tüpleri (oksijen, asetilen vb.) nasıl depolanmalıdır? / How should pressurized gas cylinders be stored?", options: ["Yatay ve gelişigüzel / Horizontally and randomly", "Dik, sabitlenmiş ve serin alanda / Upright, secured and in a cool area", "Isı kaynağı yanında / Near a heat source", "Açıkta yatık / Lying in the open"], correctAnswer: 1 },
+            { question: "Yangın söndürücü kullanımında doğru sıra nedir? / What is the correct sequence for using a fire extinguisher?", options: ["Pimi çek, hortumu yangının dibine yönelt, kola bas, süpür / Pull pin, aim at base, squeeze, sweep", "Kola bas, pimi çek / Squeeze, then pull pin", "Üst alevlere sık / Spray at top flames", "Önce uzaklaş / Move away first"], correctAnswer: 0 },
+            { question: "Vinç/caraskal ile yük kaldırırken yükün altında ne olmalıdır? / While lifting a load with a crane/hoist, what should be under the load?", options: ["Operatör / The operator", "Hiç kimse / No one", "Gözlemci / An observer", "Yardımcı / A helper"], correctAnswer: 1 },
+            { question: "Toz, buhar veya gaz bulunan ortamda solunum için hangi KKD kullanılır? / Which PPE is used for breathing in dust, vapor or gas environments?", options: ["Kulaklık / Earmuffs", "Solunum maskesi/respiratör / Respirator", "Eldiven / Gloves", "Baret / Hard hat"], correctAnswer: 1 },
+            { question: "Elektrik panosunun önü neden boş tutulmalıdır? / Why should the front of an electrical panel be kept clear?", options: ["Estetik için / For aesthetics", "Acil müdahale ve erişim için / For emergency intervention and access", "Yer kazanmak için / To save space", "Gerek yoktur / It is not necessary"], correctAnswer: 1 },
+            { question: "Güvenlik işaretlerinde MAVİ daire (örn. baret tak) neyi ifade eder? / What does a BLUE circle (e.g. wear hard hat) mean in safety signs?", options: ["Yasak / Prohibition", "Zorunluluk / Mandatory action", "Uyarı / Warning", "Bilgi / Information"], correctAnswer: 1 },
+            { question: "Çalışırken kendinize veya çevrenize zarar verebilecek bir tehlike fark ettiniz. Yetkiniz dahilinde değilse ne yaparsınız? / You notice a hazard but it is outside your authority. What do you do?", options: ["Görmezden gelirim / Ignore it", "İşi durdurup amire bildiririm / Stop work and report to supervisor", "Kendim müdahale ederim / Intervene myself", "Mesai sonunu beklerim / Wait until end of shift"], correctAnswer: 1 },
+            { question: "Sarı-siyah çizgili zemin/bant işaretlemesi neyi gösterir? / What does yellow-black striped floor/tape marking indicate?", options: ["Güvenli alan / Safe zone", "Dikkat/tehlike alanı uyarısı / Caution/hazard area warning", "Yemek alanı / Eating area", "Dinlenme alanı / Rest area"], correctAnswer: 1 },
+            { question: "Kişisel koruyucu donanımı (KKD) kim sağlamakla yükümlüdür? / Who is obligated to provide personal protective equipment (PPE)?", options: ["Çalışanın kendisi / The employee", "İşveren / The employer", "Sendika / The union", "Müşteri / The customer"], correctAnswer: 1 },
+            { question: "Kaygan/ıslak zeminde yürürken alınacak en doğru önlem nedir? / What is the best precaution when walking on a slippery/wet floor?", options: ["Koşmak / Run", "Kaymaz tabanlı ayakkabı ve dikkatli yürüme / Anti-slip shoes and walking carefully", "Telefonla yürümek / Walk while on the phone", "Elleri cepte yürümek / Walk with hands in pockets"], correctAnswer: 1 },
+            { question: "Çalışma alanındaki kabloların yerde dağınık olması hangi riski oluşturur? / What risk do scattered cables on the floor create?", options: ["Estetik sorun / Aesthetic issue", "Takılıp düşme riski / Trip and fall risk", "Gürültü / Noise", "Risk yoktur / No risk"], correctAnswer: 1 },
+            { question: "El yaralanması (kesik) sonrası ilk yapılması gereken nedir? / What is the first thing to do after a hand injury (cut)?", options: ["İşe devam etmek / Continue working", "Yarayı temizleyip kapatmak ve ilk yardım/revire başvurmak / Clean and cover, go to first aid/clinic", "Kanamayı beklemek / Wait for bleeding to stop", "Eldiven giymek / Just wear a glove"], correctAnswer: 1 },
+            { question: "5S düzeninde dağınık/gereksiz malzemenin alanda bulunması neyi artırır? / In 5S, what does clutter/unnecessary material in the area increase?", options: ["Verimliliği / Efficiency", "Kaza ve tehlike riskini / Accident and hazard risk", "Güvenliği / Safety", "Hiçbir şeyi / Nothing"], correctAnswer: 1 },
+            { question: "İş güvenliği eğitimine katılım çalışan için nasıldır? / How is participation in occupational safety training for the employee?", options: ["İsteğe bağlı / Optional", "Zorunlu / Mandatory", "Sadece yeni işe girenler için / Only for new hires", "Gereksiz / Unnecessary"], correctAnswer: 1 }
+        ];
+
+        let state = { currentUser: "", currentDept: "", index: 0, score: 0, currentSet: [], records: [], selectedIndex: null };
+
+        function showScreen(id) {
+            ['screen-login', 'screen-quiz', 'screen-result', 'screen-stats'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function startQuiz() {
+            const name = document.getElementById('user-name').value.trim();
+            const dept = document.getElementById('user-dept').value;
+            if (!name || !dept) { document.getElementById('login-error').classList.remove('hidden'); return; }
+            document.getElementById('login-error').classList.add('hidden');
+            state.currentUser = name; state.currentDept = dept; state.index = 0; state.score = 0;
+            state.currentSet = [...soruHavuzu].sort(() => Math.random() - 0.5).slice(0, 8);
+            showScreen('screen-quiz'); renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = state.currentSet[state.index];
+            state.selectedIndex = null;
+            document.getElementById('question-counter').innerText = `Soru ${state.index + 1} / ${state.currentSet.length}`;
+            document.getElementById('score-display').innerText = `Puan: ${state.score}`;
+            document.getElementById('progress-bar').style.width = `${((state.index + 1) / state.currentSet.length) * 100}%`;
+            document.getElementById('question-text').innerText = q.question;
+            const container = document.getElementById('options-container');
+            container.innerHTML = ''; 
+            document.getElementById('confirm-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            q.options.forEach((opt, i) => {
+                const b = document.createElement('button');
+                b.className = 'option-btn w-full text-left px-3 py-3 border-2 border-slate-200 rounded-xl font-semibold text-slate-700 shadow-sm transition-all hover:border-orange-400 text-xs sm:text-sm bg-white leading-tight min-h-[50px] flex items-center';
+                b.innerText = opt; 
+                b.onclick = () => handleSelection(i);
+                container.appendChild(b);
+            });
+        }
+
+        function handleSelection(idx) {
+            state.selectedIndex = idx;
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach((b, i) => {
+                b.classList.remove('selected-option');
+                if (i === idx) b.classList.add('selected-option');
+            });
+            document.getElementById('confirm-btn').classList.remove('hidden');
+        }
+
+        function confirmAnswer() {
+            if (state.selectedIndex === null) return;
+            
+            const q = state.currentSet[state.index];
+            const correct = state.selectedIndex === q.correctAnswer;
+            const btns = document.querySelectorAll('.option-btn');
+            
+            btns.forEach((b, i) => {
+                b.disabled = true;
+                b.classList.remove('selected-option', 'hover:border-orange-400');
+                if (i === q.correctAnswer) b.classList.add('correct-answer');
+                else if (i === state.selectedIndex && !correct) b.classList.add('wrong-answer');
+            });
+            
+            if (correct) state.score++;
+            
+            document.getElementById('score-display').innerText = `Puan: ${state.score}`;
+            document.getElementById('confirm-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            state.index++;
+            if (state.index < state.currentSet.length) renderQuestion();
+            else finish();
+        }
+
+        async function finish() {
+            const record = { name: state.currentUser, dept: state.currentDept, score: state.score, date: new Date().toLocaleDateString('tr-TR') };
+            state.records.push(record); 
+            document.getElementById('final-score').innerText = `${state.score} / ${state.currentSet.length}`;
+            document.getElementById('result-message').innerText = state.score >= 6 ? "Tebrikler, yüksek iş güvenliği farkındalığı." : "İş güvenliği talimatlarını tekrar incelemeniz tavsiye edilir.";
+            showScreen('screen-result');
+
+            try {
+                await fetch(API_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(record)
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function showStats() {
+            const pin = prompt("Yönetici Şifresi:");
+            if (pin === "1510") {
+                showScreen('screen-stats');
+                document.getElementById('loading-container').classList.remove('hidden');
+                document.getElementById('loading-container').classList.add('flex');
+                try {
+                    const response = await fetch(API_URL);
+                    state.records = await response.json();
+                } catch (error) {
+                    console.error(error);
+                }
+                document.getElementById('loading-container').classList.add('hidden');
+                document.getElementById('loading-container').classList.remove('flex');
+                updateMonthDropdown();
+                renderStatsTable();
+            } else if(pin !== null) { 
+                alert("Hatalı şifre."); 
+            }
+        }
+
+        function updateMonthDropdown() {
+            const monthSelect = document.getElementById('filter-month');
+            const currentVal = monthSelect.value;
+            const months = new Set();
+            state.records.forEach(r => {
+                if (r.date) {
+                    const d = String(r.date).split('.');
+                    if (d.length === 3) months.add(`${d[1]}.${d[2]}`);
+                    else {
+                        const d2 = String(r.date).split('/');
+                        if (d2.length === 3) months.add(`${d2[1]}/${d2[2]}`);
+                    }
+                }
+            });
+            monthSelect.innerHTML = '<option value="">Tüm Aylar</option>';
+            Array.from(months).sort().forEach(m => {
+                monthSelect.innerHTML += `<option value="${m}">${m}</option>`;
+            });
+            monthSelect.value = currentVal;
+        }
+
+        function renderStatsTable() {
+            const fMonth = document.getElementById('filter-month').value;
+            const fDept = document.getElementById('filter-dept').value;
+
+            let filtered = state.records;
+            if (fMonth) {
+                filtered = filtered.filter(r => r.date && (String(r.date).includes(`.${fMonth}`) || String(r.date).includes(`/${fMonth}`)));
+            }
+            if (fDept) {
+                filtered = filtered.filter(r => r.dept === fDept);
+            }
+
+            const deptMap = {};
+            filtered.forEach(r => {
+                if (!deptMap[r.dept]) deptMap[r.dept] = { sum: 0, count: 0 };
+                deptMap[r.dept].sum += Number(r.score); deptMap[r.dept].count++;
+            });
+
+            const dBody = document.getElementById('dept-stats-body'); dBody.innerHTML = '';
+            Object.keys(deptMap).forEach(d => {
+                const avg = (deptMap[d].sum / deptMap[d].count).toFixed(1);
+                dBody.innerHTML += `<tr><td class="p-2 text-slate-800 font-semibold">${d}</td><td class="p-2 text-slate-600">${deptMap[d].count}</td><td class="p-2 text-right font-bold text-slate-800">${avg}</td></tr>`;
+            });
+
+            const uBody = document.getElementById('user-stats-body'); uBody.innerHTML = '';
+            [...filtered].reverse().slice(0, 50).forEach(r => {
+                uBody.innerHTML += `<tr><td class="p-2 text-slate-800 font-medium">${r.name}</td><td class="p-2 text-slate-500">${r.dept}</td><td class="p-2 text-right font-bold text-slate-800">${r.score}</td><td class="p-2 text-right text-slate-400">${r.date || '-'}</td></tr>`;
+            });
+        }
+
+        function exportData() {
+            const fMonth = document.getElementById('filter-month').value;
+            const fDept = document.getElementById('filter-dept').value;
+            let filtered = state.records;
+            if (fMonth) filtered = filtered.filter(r => r.date && (String(r.date).includes(`.${fMonth}`) || String(r.date).includes(`/${fMonth}`)));
+            if (fDept) filtered = filtered.filter(r => r.dept === fDept);
+
+            let csv = "Ad;Birim;Skor;Tarih\n";
+            filtered.forEach(r => { csv += `${r.name};${r.dept};${r.score};${r.date || '-'}\n`; });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob); link.download = "oyak_isg_rapor.csv"; link.click();
+        }
+
+        function clearAllData() { 
+            alert("Merkezi veritabanı silme işlemi güvenlik sebebiyle yalnızca Google Sheets üzerinden manuel yapılabilir."); 
+        }
+        
+        function appReset() { 
+            document.getElementById('user-name').value = '';
+            document.getElementById('user-dept').value = '';
+            showScreen('screen-login'); 
+        }
+    </script>
+</body>
+</html>
