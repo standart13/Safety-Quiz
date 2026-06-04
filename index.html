@@ -63,8 +63,8 @@
                 </div>
                 <div id="login-error" class="text-red-500 text-xs mb-4 hidden font-semibold text-center bg-red-50 p-2 rounded-lg border border-red-100">Lütfen tüm alanları doldurunuz.</div>
                 <div class="space-y-2 mt-auto">
-                    <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-orange-700 to-amber-600 text-white font-bold py-3.5 rounded-xl shadow-lg text-sm">Teste Başla</button>
-                    <button onclick="showStats()" class="w-full bg-white border-2 border-slate-200 text-slate-600 font-bold py-3.5 rounded-xl text-sm">İstatistikler</button>
+                    <button id="btn-start" class="w-full bg-gradient-to-r from-orange-700 to-amber-600 text-white font-bold py-3.5 rounded-xl shadow-lg text-sm">Teste Başla</button>
+                    <button id="btn-stats-login" class="w-full bg-white border-2 border-slate-200 text-slate-600 font-bold py-3.5 rounded-xl text-sm">İstatistikler</button>
                 </div>
             </div>
 
@@ -84,8 +84,8 @@
                 <div id="options-container" class="grid grid-cols-1 gap-2 w-full shrink-0"></div>
                 
                 <div class="mt-auto pt-2 shrink-0">
-                    <button id="confirm-btn" onclick="confirmAnswer()" class="hidden w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Cevabı Onayla</button>
-                    <button id="next-btn" onclick="nextQuestion()" class="hidden w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Sıradaki Soru</button>
+                    <button id="confirm-btn" class="hidden w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Cevabı Onayla</button>
+                    <button id="next-btn" class="hidden w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Sıradaki Soru</button>
                 </div>
             </div>
 
@@ -97,15 +97,15 @@
                 <div class="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-orange-700 to-amber-500 my-4 drop-shadow-sm" id="final-score"></div>
                 <p id="result-message" class="mb-6 text-slate-600 font-medium text-sm px-2"></p>
                 <div class="flex flex-col gap-2 mt-auto max-w-sm mx-auto w-full">
-                    <button onclick="showStats()" class="bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm">Verileri Görüntüle</button>
-                    <button onclick="appReset()" class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-sm">Yeni Katılımcı</button>
+                    <button id="btn-stats-result" class="bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm">Verileri Görüntüle</button>
+                    <button id="btn-reset-result" class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-sm">Yeni Katılımcı</button>
                 </div>
             </div>
 
             <div id="screen-stats" class="hidden flex flex-col h-full">
                 <div class="flex items-center justify-between mb-2 border-b border-slate-200 pb-2 shrink-0">
                     <h2 class="text-base font-extrabold text-slate-800">İstatistikler</h2>
-                    <button onclick="appReset()" class="text-slate-400 hover:text-slate-700 font-bold bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-xs">Kapat</button>
+                    <button id="btn-close-stats" class="text-slate-400 hover:text-slate-700 font-bold bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-xs">Kapat</button>
                 </div>
                 <div id="loading-container" class="hidden flex-col items-center justify-center py-6 shrink-0">
                     <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-700 mb-2"></div>
@@ -113,13 +113,13 @@
                 </div>
                 <div class="flex gap-2 mb-2 shrink-0 flex-row">
                     <div class="relative w-full">
-                        <select id="filter-month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-orange-600 bg-white font-medium shadow-sm appearance-none" onchange="renderStatsTable()">
+                        <select id="filter-month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-orange-600 bg-white font-medium shadow-sm appearance-none">
                             <option value="">Tüm Aylar</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500"><svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg></div>
                     </div>
                     <div class="relative w-full">
-                        <select id="filter-dept" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-orange-600 bg-white font-medium shadow-sm appearance-none" onchange="renderStatsTable()">
+                        <select id="filter-dept" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-orange-600 bg-white font-medium shadow-sm appearance-none">
                             <option value="">Tüm Departmanlar</option>
                             <option value="HSE">İş Sağlığı Güvenliği ve Çevre</option>
                             <option value="Dökümhane">Dökümhane</option>
@@ -153,10 +153,10 @@
                     </div>
                 </div>
                 <div class="mt-2 flex flex-col gap-1.5 shrink-0 pt-2 border-t border-slate-200">
-                    <button onclick="exportData()" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl shadow-md text-xs flex items-center justify-center gap-2">
+                    <button id="btn-export" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl shadow-md text-xs flex items-center justify-center gap-2">
                         <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> CSV İndir
                     </button>
-                    <button onclick="clearAllData()" class="text-red-500 font-semibold text-[10px] py-1.5">Sıfırla</button>
+                    <button id="btn-clear" class="text-red-500 font-semibold text-[10px] py-1.5">Sıfırla</button>
                 </div>
             </div>
         </div>
@@ -164,42 +164,43 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyzEzRZbe8PI27krTyl0GiVB6XZ9DDe2B7IcY4jbw3wVlRP2JTOPCXwZ30uI9jNG3lJ/exec";
-       const soruHavuzu = [
-    { question: "Atölyede yerde yağ/sıvı birikintisi gördünüz. İlk yapılması gereken nedir?", options: ["Görmezden gelip işe devam etmek", "Alanı işaretleyip yetkiliye/temizliğe haber vermek", "Üzerine basarak geçmek", "Vardiya sonunda raporlamak"], correctAnswer: 1 },
-    { question: "Elektrik panosu kaynaklı bir yangında hangi söndürücü kullanılmalıdır?", options: ["Su", "Köpük", "Kuru Kimyevi Toz veya CO2", "Kum"], correctAnswer: 2 },
-    { question: "Baret hangi durumda takılmalıdır?", options: ["Sadece denetim varken", "Düşen cisim/çarpma riski olan tüm alanlarda", "Sadece dışarıda", "İstek dışı bir zorunluluk yoktur"], correctAnswer: 1 },
-    { question: "1,5 metre ve üzeri yükseklikte düşme riski olan işlerde ne kullanılır?", options: ["İş eldiveni", "Tam vücut emniyet kemeri", "Yelek", "Bone"], correctAnswer: 1 },
-    { question: "Bir kimyasalla çalışmadan önce hangi belgeye bakılmalıdır?", options: ["Bakım talimatı", "Güvenlik Bilgi Formu", "Üretim planı", "İzin formu"], correctAnswer: 1 },
-    { question: "Bakım/onarım sırasında makinenin enerjisini kesip kilitleme-etiketleme yöntemine ne ad verilir?", options: ["LOTO", "5S", "Kaizen", "TPM"], correctAnswer: 0 },
-    { question: "Dönen/hareketli makine parçalarında koruyucu sökülmüşse ne yapılır?", options: ["Dikkatli çalışılır", "Makine çalıştırılmaz, durum bildirilir", "Hızlı çalışılır", "Eldivenle çalışılır"], correctAnswer: 1 },
-    { question: "Forklift çalışan bir alanda yaya olarak ne yapılmalıdır?", options: ["Forkliftin önünden geçmek", "Yaya yollarını kullanıp göz teması kurmak", "Forklifte yaklaşmak", "Çatala basıp geçmek"], correctAnswer: 1 },
-    { question: "Yüksek gürültülü ortamda hangi KKD kullanılır?", options: ["Toz maskesi", "Kulak tıkacı/kulaklık", "Gözlük", "Eldiven"], correctAnswer: 1 },
-    { question: "Ağır bir yükü elle kaldırırken doğru teknik nedir?", options: ["Belden eğilerek", "Dizleri bükerek, sırtı dik tutarak", "Tek elle", "Koşarak"], correctAnswer: 1 },
-    { question: "Güvenlik işaretlerinde KIRMIZI renk neyi ifade eder?", options: ["Bilgi", "Yasak veya yangın ekipmanı", "Zorunluluk", "Güvenli durum"], correctAnswer: 1 },
-    { question: "Kaynak, kesme gibi kıvılcım/alev oluşturan işler için ne gereklidir?", options: ["Sıcak İş İzni", "Vardiya planı", "Üretim emri", "Hiçbir şey"], correctAnswer: 0 },
-    { question: "Tank, depo gibi kapalı/dar alana girmeden önce ne yapılır?", options: ["Doğrudan girilir", "Gaz ölçümü ve girme izni alınır", "Telefonla haber verilir", "Maske takılır"], correctAnswer: 1 },
-    { question: "Bir iş kazası veya ramak kala olayında doğru davranış nedir?", options: ["Saklamak", "Derhal amire ve İSG birimine bildirmek", "Kendi çözmek", "Gün sonunda yazmak"], correctAnswer: 1 },
-    { question: "Acil durum tahliyesinde nereye gidilir?", options: ["Otoparka", "Acil durum toplanma alanına", "Yemekhaneye", "Eve"], correctAnswer: 1 },
-    { question: "Acil çıkış kapıları ve yolları nasıl olmalıdır?", options: ["Kilitli", "Malzeme ile dolu", "Her zaman açık ve engelsiz", "Sadece denetimde açık"], correctAnswer: 2 },
-    { question: "El aletleriyle çalışırken hasarlı/arızalı bir alet fark ederseniz ne yaparsınız?", options: ["Yine de kullanırım", "Kullanım dışı bırakıp bildiririm", "Bantlayıp kullanırım", "Başkasına veririm"], correctAnswer: 1 },
-    { question: "Talaşlı imalat/torna tezgahında hangi KKD kesinlikle takılMAZ?", options: ["Koruyucu gözlük", "Eldiven", "İş ayakkabısı", "İş elbisesi"], correctAnswer: 1 },
-    { question: "Kimyasal sıçraması durumunda göz için kullanılan acil ekipman nedir?", options: ["Göz duşu", "İlk yardım çantası", "Yangın tüpü", "Lavabo"], correctAnswer: 0 },
-    { question: "İş ayakkabısının temel amacı nedir?", options: ["Şıklık", "Ezilme ve delinmeye karşı ayak koruması", "Rahatlık", "Soğuk koruması"], correctAnswer: 1 },
-    { question: "Basınçlı gaz tüpleri nasıl depolanmalıdır?", options: ["Yatay ve gelişigüzel", "Dik, sabitlenmiş ve serin alanda", "Isı kaynağı yanında", "Açıkta yatık"], correctAnswer: 1 },
-    { question: "Yangın söndürücü kullanımında doğru sıra nedir?", options: ["Pimi çek, hortumu yangının dibine yönelt, kola bas, süpür", "Kola bas, pimi çek", "Üst alevlere sık", "Önce uzaklaş"], correctAnswer: 0 },
-    { question: "Vinç/caraskal ile yük kaldırırken yükün altında ne olmalıdır?", options: ["Operatör", "Hiç kimse", "Gözlemci", "Yardımcı"], correctAnswer: 1 },
-    { question: "Toz, buhar veya gaz bulunan ortamda solunum için hangi KKD kullanılır?", options: ["Kulaklık", "Solunum maskesi/respiratör", "Eldiven", "Baret"], correctAnswer: 1 },
-    { question: "Elektrik panosunun önü neden boş tutulmalıdır?", options: ["Estetik için", "Acil müdahale ve erişim için", "Yer kazanmak için", "Gerek yoktur"], correctAnswer: 1 },
-    { question: "Güvenlik işaretlerinde MAVİ daire neyi ifade eder?", options: ["Yasak", "Zorunluluk", "Uyarı", "Bilgi"], correctAnswer: 1 },
-    { question: "Çalışırken kendinize veya çevrenize zarar verebilecek bir tehlike fark ettiniz. Yetkiniz dahilinde değilse ne yaparsınız?", options: ["Görmezden gelirim", "İşi durdurup amire bildiririm", "Kendim müdahale ederim", "Mesai sonunu beklerim"], correctAnswer: 1 },
-    { question: "Sarı-siyah çizgili zemin/bant işaretlemesi neyi gösterir?", options: ["Güvenli alan", "Dikkat/tehlike alanı uyarısı", "Yemek alanı", "Dinlenme alanı"], correctAnswer: 1 },
-    { question: "Kişisel koruyucu donanımı kim sağlamakla yükümlüdür?", options: ["Çalışanın kendisi", "İşveren", "Sendika", "Müşteri"], correctAnswer: 1 },
-    { question: "Kaygan/ıslak zeminde yürürken alınacak en doğru önlem nedir?", options: ["Koşmak", "Kaymaz tabanlı ayakkabı ve dikkatli yürüme", "Telefonla yürümek", "Elleri cepte yürümek"], correctAnswer: 1 },
-    { question: "Çalışma alanındaki kabloların yerde dağınık olması hangi riski oluşturur?", options: ["Estetik sorun", "Takılıp düşme riski", "Gürültü", "Risk yoktur"], correctAnswer: 1 },
-    { question: "El yaralanması sonrası ilk yapılması gereken nedir?", options: ["İşe devam etmek", "Yarayı temizleyip kapatmak ve ilk yardım/revire başvurmak", "Kanamayı beklemek", "Eldiven giymek"], correctAnswer: 1 },
-    { question: "5S düzeninde dağınık/gereksiz malzemenin alanda bulunması neyi artırır?", options: ["Verimliliği", "Kaza ve tehlike riskini", "Güvenliği", "Hiçbir şeyi"], correctAnswer: 1 },
-    { question: "İş güvenliği eğitimine katılım çalışan için nasıldır?", options: ["İsteğe bağlı", "Zorunlu", "Sadece yeni işe girenler için", "Gereksiz"], correctAnswer: 1 }
-];
+        const soruHavuzu = [
+            { question: "Atölyede yerde yağ/sıvı birikintisi gördünüz. İlk yapılması gereken nedir?", options: ["Görmezden gelip işe devam etmek", "Alanı işaretleyip yetkiliye/temizliğe haber vermek", "Üzerine basarak geçmek", "Vardiya sonunda raporlamak"], correctAnswer: 1 },
+            { question: "Elektrik panosu kaynaklı bir yangında hangi söndürücü kullanılmalıdır?", options: ["Su", "Köpük", "Kuru Kimyevi Toz veya CO2", "Kum"], correctAnswer: 2 },
+            { question: "Baret (kask) hangi durumda takılmalıdır?", options: ["Sadece denetim varken", "Düşen cisim/çarpma riski olan tüm alanlarda", "Sadece dışarıda", "İstek dışı bir zorunluluk yoktur"], correctAnswer: 1 },
+            { question: "1,5 metre ve üzeri yükseklikte düşme riski olan işlerde ne kullanılır?", options: ["İş eldiveni", "Tam vücut emniyet kemeri", "Yelek", "Bone"], correctAnswer: 1 },
+            { question: "Bir kimyasalla çalışmadan önce hangi belgeye bakılmalıdır?", options: ["Bakım talimatı", "Güvenlik Bilgi Formu (GBF/SDS)", "Üretim planı", "İzin formu"], correctAnswer: 1 },
+            { question: "Bakım/onarım sırasında makinenin enerjisini kesip kilitleme-etiketleme yöntemine ne ad verilir?", options: ["LOTO (Kilitle-Etiketle)", "5S", "Kaizen", "TPM"], correctAnswer: 0 },
+            { question: "Dönen/hareketli makine parçalarında koruyucu (muhafaza) sökülmüşse ne yapılır?", options: ["Dikkatli çalışılır", "Makine çalıştırılmaz, durum bildirilir", "Hızlı çalışılır", "Eldivenle çalışılır"], correctAnswer: 1 },
+            { question: "Forklift çalışan bir alanda yaya olarak ne yapılmalıdır?", options: ["Forkliftin önünden geçmek", "Yaya yollarını kullanıp göz teması kurmak", "Forklifte yaklaşmak", "Çatala basıp geçmek"], correctAnswer: 1 },
+            { question: "Yüksek gürültülü ortamda hangi KKD kullanılır?", options: ["Toz maskesi", "Kulak tıkacı/kulaklık", "Gözlük", "Eldiven"], correctAnswer: 1 },
+            { question: "Ağır bir yükü elle kaldırırken doğru teknik nedir?", options: ["Belden eğilerek", "Dizleri bükerek, sırtı dik tutarak", "Tek elle", "Koşarak"], correctAnswer: 1 },
+            { question: "Güvenlik işaretlerinde KIRMIZI renk neyi ifade eder?", options: ["Bilgi", "Yasak veya yangın ekipmanı", "Zorunluluk", "Güvenli durum"], correctAnswer: 1 },
+            { question: "Kaynak, kesme gibi kıvılcım/alev oluşturan işler için ne gereklidir?", options: ["Sıcak İş İzni", "Vardiya planı", "Üretim emri", "Hiçbir şey"], correctAnswer: 0 },
+            { question: "Tank, depo gibi kapalı/dar alana girmeden önce ne yapılır?", options: ["Doğrudan girilir", "Gaz ölçümü ve girme izni alınır", "Telefonla haber verilir", "Maske takılır"], correctAnswer: 1 },
+            { question: "Bir iş kazası veya ramak kala olayında doğru davranış nedir?", options: ["Saklamak", "Derhal amire ve İSG birimine bildirmek", "Kendi çözmek", "Gün sonunda yazmak"], correctAnswer: 1 },
+            { question: "Acil durum tahliyesinde nereye gidilir?", options: ["Otoparka", "Acil durum toplanma alanına", "Yemekhaneye", "Eve"], correctAnswer: 1 },
+            { question: "Acil çıkış kapıları ve yolları nasıl olmalıdır?", options: ["Kilitli", "Malzeme ile dolu", "Her zaman açık ve engelsiz", "Sadece denetimde açık"], correctAnswer: 2 },
+            { question: "El aletleriyle çalışırken hasarlı/arızalı bir alet fark ederseniz ne yaparsınız?", options: ["Yine de kullanırım", "Kullanım dışı bırakıp bildiririm", "Bantlayıp kullanırım", "Başkasına veririm"], correctAnswer: 1 },
+            { question: "Talaşlı imalat/torna tezgahında hangi KKD kesinlikle takılMAZ?", options: ["Koruyucu gözlük", "Eldiven (dönen parça riski)", "İş ayakkabısı", "İş elbisesi"], correctAnswer: 1 },
+            { question: "Kimyasal sıçraması durumunda göz için kullanılan acil ekipman nedir?", options: ["Göz duşu", "İlk yardım çantası", "Yangın tüpü", "Lavabo"], correctAnswer: 0 },
+            { question: "İş ayakkabısının (çelik burunlu) temel amacı nedir?", options: ["Şıklık", "Ezilme ve delinmeye karşı ayak koruması", "Rahatlık", "Soğuk koruması"], correctAnswer: 1 },
+            { question: "Basınçlı gaz tüpleri (oksijen, asetilen vb.) nasıl depolanmalıdır?", options: ["Yatay ve gelişigüzel", "Dik, sabitlenmiş ve serin alanda", "Isı kaynağı yanında", "Açıkta yatık"], correctAnswer: 1 },
+            { question: "Yangın söndürücü kullanımında doğru sıra nedir?", options: ["Pimi çek, hortumu yangının dibine yönelt, kola bas, süpür", "Kola bas, pimi çek", "Üst alevlere sık", "Önce uzaklaş"], correctAnswer: 0 },
+            { question: "Vinç/caraskal ile yük kaldırırken yükün altında ne olmalıdır?", options: ["Operatör", "Hiç kimse", "Gözlemci", "Yardımcı"], correctAnswer: 1 },
+            { question: "Toz, buhar veya gaz bulunan ortamda solunum için hangi KKD kullanılır?", options: ["Kulaklık", "Solunum maskesi/respiratör", "Eldiven", "Baret"], correctAnswer: 1 },
+            { question: "Elektrik panosunun önü neden boş tutulmalıdır?", options: ["Estetik için", "Acil müdahale ve erişim için", "Yer kazanmak için", "Gerek yoktur"], correctAnswer: 1 },
+            { question: "Güvenlik işaretlerinde MAVİ daire (örn. baret tak) neyi ifade eder?", options: ["Yasak", "Zorunluluk", "Uyarı", "Bilgi"], correctAnswer: 1 },
+            { question: "Çalışırken kendinize veya çevrenize zarar verebilecek bir tehlike fark ettiniz. Yetkiniz dahilinde değilse ne yaparsınız?", options: ["Görmezden gelirim", "İşi durdurup amire bildiririm", "Kendim müdahale ederim", "Mesai sonunu beklerim"], correctAnswer: 1 },
+            { question: "Sarı-siyah çizgili zemin/bant işaretlemesi neyi gösterir?", options: ["Güvenli alan", "Dikkat/tehlike alanı uyarısı", "Yemek alanı", "Dinlenme alanı"], correctAnswer: 1 },
+            { question: "Kişisel koruyucu donanımı (KKD) kim sağlamakla yükümlüdür?", options: ["Çalışanın kendisi", "İşveren", "Sendika", "Müşteri"], correctAnswer: 1 },
+            { question: "Kaygan/ıslak zeminde yürürken alınacak en doğru önlem nedir?", options: ["Koşmak", "Kaymaz tabanlı ayakkabı ve dikkatli yürüme", "Telefonla yürümek", "Elleri cepte yürümek"], correctAnswer: 1 },
+            { question: "Çalışma alanındaki kabloların yerde dağınık olması hangi riski oluşturur?", options: ["Estetik sorun", "Takılıp düşme riski", "Gürültü", "Risk yoktur"], correctAnswer: 1 },
+            { question: "El yaralanması (kesik) sonrası ilk yapılması gereken nedir?", options: ["İşe devam etmek", "Yarayı temizleyip kapatmak ve ilk yardım/revire başvurmak", "Kanamayı beklemek", "Eldiven giymek"], correctAnswer: 1 },
+            { question: "5S düzeninde dağınık/gereksiz malzemenin alanda bulunması neyi artırır?", options: ["Verimliliği", "Kaza ve tehlike riskini", "Güvenliği", "Hiçbir şeyi"], correctAnswer: 1 },
+            { question: "İş güvenliği eğitimine katılım çalışan için nasıldır?", options: ["İsteğe bağlı", "Zorunlu", "Sadece yeni işe girenler için", "Gereksiz"], correctAnswer: 1 }
+        ];
+
         let state = { currentUser: "", currentDept: "", index: 0, score: 0, currentSet: [], records: [], selectedIndex: null };
 
         function showScreen(id) {
@@ -220,19 +221,19 @@
         function renderQuestion() {
             const q = state.currentSet[state.index];
             state.selectedIndex = null;
-            document.getElementById('question-counter').innerText = `Soru ${state.index + 1} / ${state.currentSet.length}`;
-            document.getElementById('score-display').innerText = `Puan: ${state.score}`;
-            document.getElementById('progress-bar').style.width = `${((state.index + 1) / state.currentSet.length) * 100}%`;
+            document.getElementById('question-counter').innerText = "Soru " + (state.index + 1) + " / " + state.currentSet.length;
+            document.getElementById('score-display').innerText = "Puan: " + state.score;
+            document.getElementById('progress-bar').style.width = (((state.index + 1) / state.currentSet.length) * 100) + "%";
             document.getElementById('question-text').innerText = q.question;
             const container = document.getElementById('options-container');
-            container.innerHTML = ''; 
+            container.innerHTML = '';
             document.getElementById('confirm-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.add('hidden');
 
             q.options.forEach((opt, i) => {
                 const b = document.createElement('button');
                 b.className = 'option-btn w-full text-left px-3 py-3 border-2 border-slate-200 rounded-xl font-semibold text-slate-700 shadow-sm transition-all hover:border-orange-400 text-xs sm:text-sm bg-white leading-tight min-h-[50px] flex items-center';
-                b.innerText = opt; 
+                b.innerText = opt;
                 b.onclick = () => handleSelection(i);
                 container.appendChild(b);
             });
@@ -250,21 +251,17 @@
 
         function confirmAnswer() {
             if (state.selectedIndex === null) return;
-            
             const q = state.currentSet[state.index];
             const correct = state.selectedIndex === q.correctAnswer;
             const btns = document.querySelectorAll('.option-btn');
-            
             btns.forEach((b, i) => {
                 b.disabled = true;
                 b.classList.remove('selected-option', 'hover:border-orange-400');
                 if (i === q.correctAnswer) b.classList.add('correct-answer');
                 else if (i === state.selectedIndex && !correct) b.classList.add('wrong-answer');
             });
-            
             if (correct) state.score++;
-            
-            document.getElementById('score-display').innerText = `Puan: ${state.score}`;
+            document.getElementById('score-display').innerText = "Puan: " + state.score;
             document.getElementById('confirm-btn').classList.add('hidden');
             document.getElementById('next-btn').classList.remove('hidden');
         }
@@ -277,11 +274,10 @@
 
         async function finish() {
             const record = { name: state.currentUser, dept: state.currentDept, score: state.score, date: new Date().toLocaleDateString('tr-TR') };
-            state.records.push(record); 
-            document.getElementById('final-score').innerText = `${state.score} / ${state.currentSet.length}`;
+            state.records.push(record);
+            document.getElementById('final-score').innerText = state.score + " / " + state.currentSet.length;
             document.getElementById('result-message').innerText = state.score >= 6 ? "Tebrikler, yüksek iş güvenliği farkındalığı." : "İş güvenliği talimatlarını tekrar incelemeniz tavsiye edilir.";
             showScreen('screen-result');
-
             try {
                 await fetch(API_URL, {
                     method: "POST",
@@ -310,8 +306,8 @@
                 document.getElementById('loading-container').classList.remove('flex');
                 updateMonthDropdown();
                 renderStatsTable();
-            } else if(pin !== null) { 
-                alert("Hatalı şifre."); 
+            } else if (pin !== null) {
+                alert("Hatalı şifre.");
             }
         }
 
@@ -322,16 +318,16 @@
             state.records.forEach(r => {
                 if (r.date) {
                     const d = String(r.date).split('.');
-                    if (d.length === 3) months.add(`${d[1]}.${d[2]}`);
+                    if (d.length === 3) months.add(d[1] + "." + d[2]);
                     else {
                         const d2 = String(r.date).split('/');
-                        if (d2.length === 3) months.add(`${d2[1]}/${d2[2]}`);
+                        if (d2.length === 3) months.add(d2[1] + "/" + d2[2]);
                     }
                 }
             });
             monthSelect.innerHTML = '<option value="">Tüm Aylar</option>';
             Array.from(months).sort().forEach(m => {
-                monthSelect.innerHTML += `<option value="${m}">${m}</option>`;
+                monthSelect.innerHTML += '<option value="' + m + '">' + m + '</option>';
             });
             monthSelect.value = currentVal;
         }
@@ -339,30 +335,26 @@
         function renderStatsTable() {
             const fMonth = document.getElementById('filter-month').value;
             const fDept = document.getElementById('filter-dept').value;
-
             let filtered = state.records;
             if (fMonth) {
-                filtered = filtered.filter(r => r.date && (String(r.date).includes(`.${fMonth}`) || String(r.date).includes(`/${fMonth}`)));
+                filtered = filtered.filter(r => r.date && (String(r.date).includes("." + fMonth) || String(r.date).includes("/" + fMonth)));
             }
             if (fDept) {
                 filtered = filtered.filter(r => r.dept === fDept);
             }
-
             const deptMap = {};
             filtered.forEach(r => {
                 if (!deptMap[r.dept]) deptMap[r.dept] = { sum: 0, count: 0 };
                 deptMap[r.dept].sum += Number(r.score); deptMap[r.dept].count++;
             });
-
             const dBody = document.getElementById('dept-stats-body'); dBody.innerHTML = '';
             Object.keys(deptMap).forEach(d => {
                 const avg = (deptMap[d].sum / deptMap[d].count).toFixed(1);
-                dBody.innerHTML += `<tr><td class="p-2 text-slate-800 font-semibold">${d}</td><td class="p-2 text-slate-600">${deptMap[d].count}</td><td class="p-2 text-right font-bold text-slate-800">${avg}</td></tr>`;
+                dBody.innerHTML += '<tr><td class="p-2 text-slate-800 font-semibold">' + d + '</td><td class="p-2 text-slate-600">' + deptMap[d].count + '</td><td class="p-2 text-right font-bold text-slate-800">' + avg + '</td></tr>';
             });
-
             const uBody = document.getElementById('user-stats-body'); uBody.innerHTML = '';
             [...filtered].reverse().slice(0, 50).forEach(r => {
-                uBody.innerHTML += `<tr><td class="p-2 text-slate-800 font-medium">${r.name}</td><td class="p-2 text-slate-500">${r.dept}</td><td class="p-2 text-right font-bold text-slate-800">${r.score}</td><td class="p-2 text-right text-slate-400">${r.date || '-'}</td></tr>`;
+                uBody.innerHTML += '<tr><td class="p-2 text-slate-800 font-medium">' + r.name + '</td><td class="p-2 text-slate-500">' + r.dept + '</td><td class="p-2 text-right font-bold text-slate-800">' + r.score + '</td><td class="p-2 text-right text-slate-400">' + (r.date || '-') + '</td></tr>';
             });
         }
 
@@ -370,25 +362,41 @@
             const fMonth = document.getElementById('filter-month').value;
             const fDept = document.getElementById('filter-dept').value;
             let filtered = state.records;
-            if (fMonth) filtered = filtered.filter(r => r.date && (String(r.date).includes(`.${fMonth}`) || String(r.date).includes(`/${fMonth}`)));
+            if (fMonth) filtered = filtered.filter(r => r.date && (String(r.date).includes("." + fMonth) || String(r.date).includes("/" + fMonth)));
             if (fDept) filtered = filtered.filter(r => r.dept === fDept);
-
             let csv = "Ad;Birim;Skor;Tarih\n";
-            filtered.forEach(r => { csv += `${r.name};${r.dept};${r.score};${r.date || '-'}\n`; });
+            filtered.forEach(r => { csv += r.name + ";" + r.dept + ";" + r.score + ";" + (r.date || '-') + "\n"; });
             const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob); link.download = "oyak_isg_rapor.csv"; link.click();
         }
 
-        function clearAllData() { 
-            alert("Merkezi veritabanı silme işlemi güvenlik sebebiyle yalnızca Google Sheets üzerinden manuel yapılabilir."); 
+        function clearAllData() {
+            alert("Merkezi veritabanı silme işlemi güvenlik sebebiyle yalnızca Google Sheets üzerinden manuel yapılabilir.");
         }
-        
-        function appReset() { 
+
+        function appReset() {
             document.getElementById('user-name').value = '';
             document.getElementById('user-dept').value = '';
-            showScreen('screen-login'); 
+            showScreen('screen-login');
         }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
+            on('btn-start', startQuiz);
+            on('btn-stats-login', showStats);
+            on('confirm-btn', confirmAnswer);
+            on('next-btn', nextQuestion);
+            on('btn-stats-result', showStats);
+            on('btn-reset-result', appReset);
+            on('btn-close-stats', appReset);
+            on('btn-export', exportData);
+            on('btn-clear', clearAllData);
+            const fm = document.getElementById('filter-month');
+            const fd = document.getElementById('filter-dept');
+            if (fm) fm.addEventListener('change', renderStatsTable);
+            if (fd) fd.addEventListener('change', renderStatsTable);
+        });
     </script>
 </body>
 </html>
