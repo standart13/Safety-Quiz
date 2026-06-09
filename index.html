@@ -166,410 +166,111 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbyzEzRZbe8PI27krTyl0GiVB6XZ9DDe2B7IcY4jbw3wVlRP2JTOPCXwZ30uI9jNG3lJ/exec";
-        const QUESTION_COUNT = 8;
+        const QUESTION_COUNT = 10;
 
-       const soruHavuzu = [
-    { 
-        question: "Atölyede yerde yağ veya sıvı birikintisi gördünüz. İlk yapılması gereken nedir?", 
-        options: [
-            "Alanı güvenlik şeridi ile izole edip durumu derhal yetkili amire bildirmek", 
-            "Temizlik personeli gelene kadar alanda beklemek", 
-            "Sıvının üzerine talaş dökerek çalışmaya devam etmek", 
-            "Vardiya teslim defterine not düşmek"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "Elektrik panosu kaynaklı bir yangında hangi tip söndürücü kullanılmalıdır?", 
-        options: [
-            "Karbondioksit veya Kuru Kimyevi Toz söndürücüler", 
-            "Sulu sistem söndürücüler", 
-            "Sentetik köpüklü söndürücüler", 
-            "A sınıfı kimyasal sıvı söndürücüler"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "Bakım veya onarım sırasında makinenin enerjisini kesip tekrar çalıştırılmasını engellemek için kullanılan sisteme ne ad verilir?", 
-        options: [
-            "Enerji kesme ve etiketleme prosedürü", 
-            "FMEA analiz sistemi", 
-            "HAZOP değerlendirmesi", 
-            "5S standart düzenlemesi"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "Yüksek gürültülü ortamda hangi kişisel koruyucu donanım kullanılmalıdır?", 
-        options: [
-            "Kulak tıkacı veya manşonlu kulaklık", 
-            "Titreşim sönümleyici eldiven", 
-            "Tam yüz solunum maskesi", 
-            "Koruyucu baret"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "Herhangi bir yaralanma veya hasar ile sonuçlanmayan ancak potansiyel tehlike barındıran ramak kala olaylarında ne yapılmalıdır?", 
-        options: [
-            "Olayı ramak kala bildirim formu ile derhal İSG birimine raporlamak", 
-            "Sadece fiziksel yaralanma durumlarında bildirim yapmak", 
-            "Durumu çalışma arkadaşları arasında değerlendirip kapatmak", 
-            "Yalnızca iş yeri hekimine sözlü bilgi vermek"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "El aletleriyle çalışırken hasarlı veya izolasyonu bozuk bir alet fark ederseniz ne yaparsınız?", 
-        options: [
-            "Aleti etiketleyerek kullanımdan kaldırmak ve yenisiyle değiştirmek üzere ilgili amire bildirmek", 
-            "İşi bitirene kadar yüksek dikkatle kullanmaya devam etmek", 
-            "Elektrik bandı ile geçici onarım yapıp vardiya sonuna kadar kullanmak", 
-            "Kendi riskini kendi alan başka bir çalışana devretmek"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "Çelik burunlu ve çelik ara tabanlı iş ayakkabısının temel amacı nedir?", 
-        options: [
-            "Burun kısmına düşen ağır cisimlere ezilmeye ve tabandan delici cisim batmalarına karşı korumak", 
-            "Kaymayı önlemek ve kimyasal dökülmelerine karşı mutlak izolasyon sağlamak", 
-            "Yüksek gerilim hatlarında elektrik çarpmasına karşı topraklama yapmak", 
-            "Uzun süreli ayakta çalışmalarda ayak bileğini burkulmalara karşı tam sabitlemek"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "İş sağlığı ve güvenliği işaretlemelerinde mavi daire zemin üzerine beyaz piktogram neyi ifade eder?", 
-        options: [
-            "Kişisel koruyucu donanım kullanım zorunluluğu veya mecburi eylem", 
-            "Özel tehlike uyarısı", 
-            "Acil durum tahliye yönlendirmesi", 
-            "Yangınla mücadele ekipmanı yerleşimi"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "İşyerinde kullanılması gereken kişisel koruyucu donanımları tedarik etmek ve çalışanlara ücretsiz sağlamak kimin yasal yükümlülüğüdür?", 
-        options: [
-            "İşveren", 
-            "İş Sağlığı ve Güvenliği Kurulu", 
-            "Sendika temsilciliği", 
-            "Çalışma ve Sosyal Güvenlik Bakanlığı"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "Ekranlı araçlarla çalışmalarda göz yorgunluğunu ve kas iskelet sistemi rahatsızlıklarını önlemek için mola düzeni nasıl olmalıdır?", 
-        options: [
-            "Günlük çalışma süresi değiştirilmeden ekran başından uzaklaşılan periyodik dinlenme araları uygulanmalıdır", 
-            "İş yoğunluğuna göre sadece mesai bitiminden önce toplu mola kullanılmalıdır", 
-            "Çalışanın inisiyatifine bırakılarak sadece gözlerde ağrı hissedildiğinde ekran kapatılmalıdır", 
-            "Ara dinlenmeleri yalnızca fiziksel olarak ağır işler yapan personelle sınırlı tutulmalıdır"
-        ], 
-        correctAnswer: 0 
-    },
-    { 
-        question: "Baret kullanımı hangi durumlarda zorunludur?", 
-        options: [
-            "Yalnızca açık hava şantiyelerinde", 
-            "Risk değerlendirmesi ile belirlenmiş baret zorunlu alanlarda ve yüksekten cisim düşme riski olan her yerde", 
-            "Sadece ağır yük kaldırma operasyonları sırasında", 
-            "İşletmeye dışarıdan gelen ziyaretçiler için"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Bir kimyasalla çalışmadan önce o kimyasalın tehlikeleri ve ilkyardım önlemleri için hangi belgeye bakılmalıdır?", 
-        options: [
-            "Makine bakım kılavuzu", 
-            "Güvenlik Bilgi Formu", 
-            "Risk değerlendirme raporu", 
-            "Acil eylem planı"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Forklift operasyonunun sürdüğü bir alanda yaya olarak bulunuyorsanız nasıl hareket edilmelidir?", 
-        options: [
-            "Yaya geçiş üstünlüğünü kullanarak güzergahta ilerlemek", 
-            "Göz teması kurup operatörün durduğundan emin olduktan sonra belirlenmiş yaya yolunu kullanmak", 
-            "Forkliftin manevra alanının bir metre uzağından hızlıca geçmek", 
-            "Sesli uyarı vererek aracın arka tarafından dolanmak"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Kaynak veya taşlama gibi kıvılcım ve açık alev oluşturan işlere başlamadan önce hangi prosedür işletilmelidir?", 
-        options: [
-            "Yüksekte çalışma izni prosedürü", 
-            "Sıcak iş izni prosedürü", 
-            "Kapalı alan çalışma izni prosedürü", 
-            "Kazı çalışma izni prosedürü"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Acil durum tahliye sirenini duyduğunuzda ilk olarak nereye yönelmeniz gerekir?", 
-        options: [
-            "En yakın sığınağa", 
-            "Önceden belirlenmiş acil durum toplanma alanına", 
-            "Bina girişindeki güvenlik kulübesine", 
-            "İşletme sınırları dışındaki ana caddeye"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Talaşlı imalat veya torna tezgahında çalışırken dönen aksama kapılma riskine karşı hangi kişisel koruyucu donanım kesinlikle takılmaz?", 
-        options: [
-            "Tam korumalı iş gözlüğü", 
-            "Pamuklu veya örgü iş eldiveni", 
-            "Çelik burunlu iş ayakkabısı", 
-            "Vücuda oturan iş tulumu"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Akaryakıt tiner veya makine yağı gibi yanıcı sıvıların oluşturduğu B sınıfı yangınlara hangi söndürücü ile müdahale edilmemelidir?", 
-        options: [
-            "Kuru Kimyevi Toz", 
-            "Basınçlı Su", 
-            "Karbondioksit", 
-            "Sentetik Köpük"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Seyyar elektrikli el aletlerinde kaçak akıma karşı koruma sağlamak için hangi önlem alınmış olmalıdır?", 
-        options: [
-            "Cihazın sadece ahşap yüzeylerde çalıştırılması", 
-            "Kaçak akım rölesi kullanılması ve cihazın topraklanmış fiş ile prize bağlanması", 
-            "Aletin metal gövdesine iletken bant sarılması", 
-            "Aletin yalnızca kalın kauçuk eldivenlerle kullanılması"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "İşletmede tehlikeli bir kimyasalın büyük çaplı dökülmesi durumunda ilk müdahale adımı ne olmalıdır?", 
-        options: [
-            "Sıvının yayıldığı alanı kendi imkanlarıyla derhal temizlemeye başlamak", 
-            "Alanı tahliye etmek dökülmeyi yetkili birime bildirmek ve uygun kişisel koruyucu donanıma sahip müdahale ekibini beklemek", 
-            "Dökülen sıvıya bol miktarda su sıkarak yoğunluğunu ve etkisini azaltmaya çalışmak", 
-            "Kaynağı kapatmaya çalışıp döküntü kitini tek başına uygulamak"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "Kaldırma ve iletme ekipmanlarının periyodik kontrolleri yasal mevzuat uyarınca standart bir sapma yoksa azami hangi sıklıkla yapılmalıdır?", 
-        options: [
-            "Altı ayda bir", 
-            "Yılda bir", 
-            "İki yılda bir", 
-            "Sadece ekipman arızalandığında onarım sonrasında"
-        ], 
-        correctAnswer: 1 
-    },
-    { 
-        question: "1.5 metre ve üzeri yükseklikte düşme riski olan işlerde hangi ekipman kullanılır?", 
-        options: [
-            "Çift lanyardlı standart bel kemeri", 
-            "Bel tipi konumlandırma kemeri", 
-            "Paraşüt tipi tam vücut emniyet kemeri", 
-            "Baret ve çelik burunlu ayakkabı kombinasyonu"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Ağır bir yükü elle kaldırırken uygulanması gereken biyomekanik olarak doğru teknik nedir?", 
-        options: [
-            "Dizleri kırmadan doğrudan belden eğilmek", 
-            "Belden eğilerek yükü göğüs kafesine yaslamak", 
-            "Dizleri bükerek omurgayı dik tutmak ve yükü bedenin ağırlık merkezine yakın konumlandırmak", 
-            "Kolların itme gücüyle yükü ani bir şekilde kaldırmak"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Tavan vinci veya caraskal ile ağır yük kaldırılırken güvenlik gereği yükün altında veya etki alanında kimler bulunabilir?", 
-        options: [
-            "Sadece sapanlama işlemini yapan operatör yardımcısı", 
-            "Yük salınımını engellemek için yükü eliyle destekleyen personel", 
-            "Hiç kimse bulunmamalıdır", 
-            "Yalnızca baret takılı olan İSG uzmanı veya vardiya amiri"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Yoğun toz zararlı buhar veya toksik gaz bulunan çalışma ortamlarında solunum sistemini korumak için hangi ekipman kullanılmalıdır?", 
-        options: [
-            "Standart cerrahi maske", 
-            "Aktif karbonlu tek kullanımlık bez maske", 
-            "Ortamdaki tehlikeye uygun filtreli yarım veya tam yüz solunum maskesi", 
-            "Yalnızca tesisin genel havalandırma sistemi"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Çalışma sırasında kendinize veya çevrenize zarar verebilecek seviyede bir tehlike fark ettiniz ancak müdahale yetkiniz bulunmuyor. Ne yapmalısınız?", 
-        options: [
-            "İnsiyatif alarak tehlikeyi anında kendi imkanlarınızla ortadan kaldırmak", 
-            "Çalışma arkadaşlarınıza sözlü uyarı yapıp mevcut koşullarda işe devam etmek", 
-            "İşi durdurup güvenli mesafeye çekilmek ve durumu derhal yetkili amire raporlamak", 
-            "Olayı vardiya sonu teslim defterine not edip sahayı terk etmek"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Kaygan veya sıvı dökülmüş bir zeminde yürürken düşme riskini azaltmak için alınacak en doğru önlem nedir?", 
-        options: [
-            "Hızlı adımlarla tehlikeli alanı derhal terk etmek", 
-            "Zeminin kendiliğinden kurumasını bekleyip o bölgedeki işi tamamen durdurmak", 
-            "Uyarı levhası koyarak kaymaz tabanlı ayakkabı ile kısa adımlarla ilerlemek", 
-            "Normal yürüyüş hızında ilerlerken sadece zemine odaklanmak"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "5S düzenleme standartlarında sahada dağınık veya iş için gereksiz malzemenin bulunması operasyonel olarak neyi artırır?", 
-        options: [
-            "İşletmenin hammadde maliyetlerini", 
-            "Yalnızca dış denetimlerdeki dokümantasyon uygunsuzluklarını", 
-            "Acil durum tahliyesindeki zorlukları ve genel iş kazası olasılığını", 
-            "Üretim hattındaki genel makine çevrim hızını"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Dönen veya hareketli makine parçalarında fiziksel koruyucu sökülmüşse hangi işlem uygulanır?", 
-        options: [
-            "Sensörler aktif konumdaysa çalışmaya devam edilir", 
-            "Yalnızca yetkili operatör bu şekilde üretime devam edebilir", 
-            "Makine kesinlikle çalıştırılmaz ve durum bakım birimine bildirilir", 
-            "Tezgah daha düşük devirde kontrollü çalıştırılır"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "İş sağlığı ve güvenliği işaretlemelerinde kırmızı renk genel olarak neyi ifade eder?", 
-        options: [
-            "Uyarı ve potansiyel tehlike", 
-            "Zorunluluk ve kişisel koruyucu donanım kullanımı", 
-            "Yasaklama ve yangınla mücadele ekipmanı konumu", 
-            "Acil çıkış ve ilk yardım istasyonu"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Kapalı alanda çalışan bir personelin içeride bayıldığını fark eden gözetmen ne yapmalıdır?", 
-        options: [
-            "Nefesini tutarak hızla içeri girip personeli dışarı çekmeye çalışmalıdır", 
-            "Ortama endüstriyel oksijen tüpü boşaltarak içerideki hava kalitesini artırmalıdır", 
-            "İçeri kesinlikle girmeden acil durum alarmını devreye sokmalı ve profesyonel kurtarma ekibini yönlendirmelidir", 
-            "Sadece standart bir toz maskesi takarak müdahaleye gitmelidir"
-        ], 
-        correctAnswer: 2 
-    },
-    { 
-        question: "Tank veya silo gibi kapalı ve dar alanlara giriş öncesi zorunlu olarak ne yapılmalıdır?", 
-        options: [
-            "Sadece temiz hava solunum cihazı takarak giriş yapmak", 
-            "Giriş ve çıkışları hızlandırarak içeride kalma süresini minimuma indirmek", 
-            "Gözcü bulundurmadan ortama sadece endüstriyel fan ile hava basmak", 
-            "Atmosferik gaz ölçümü yapmak ve kapalı alan çalışma izni formunu onaylatmak"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Endüstriyel tesislerde acil çıkış kapıları ve kaçış yolları fiziki olarak nasıl olmalıdır?", 
-        options: [
-            "Sadece acil durumlarda yetkili personel tarafından anahtarla açılabilir durumda olmalıdır", 
-            "İçeriye doğru açılan ve yangına dayanıklı sensörlü cam kapı olmalıdır", 
-            "Mesai saatleri dışında kilitli tutulup depo alanı olarak kullanılabilmelidir", 
-            "Dışarıya doğru açılan panik barlı sistemde ve kaçış yolu sürekli engelsiz tutulan yapıda olmalıdır"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Kimyasal bir maddenin göze sıçraması durumunda sahada uygulanacak ilk acil müdahale nedir?", 
-        options: [
-            "Göze bol basınçlı şebeke suyu tutmak", 
-            "Asidik kimyasallara karşı bazik nötralize edici damla kullanmak", 
-            "Gözleri kapalı tutarak ilk yardım ekibinin gelmesini beklemek", 
-            "Gözleri en az on beş dakika boyunca göz duşu ile yıkamak ve ardından tıbbi destek almak"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Basınçlı endüstriyel gaz tüpleri sahada nasıl depolanmalıdır?", 
-        options: [
-            "Yanıcı ve yakıcı tüpler bir arada yatay istiflenerek depolanmalıdır", 
-            "Doğrudan güneş ışığı alan açık hava alanlarında depolanmalıdır", 
-            "Yalnızca kapalı ve havalandırmasız izole odalarda depolanmalıdır", 
-            "Dik konumda zincirlenerek sabitlenmeli dolu ve boş olarak ayrılarak depolanmalıdır"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Taşınabilir yangın söndürme cihazı kullanımında doğru müdahale sırası nedir?", 
-        options: [
-            "Önce rüzgarı karşına al pimi çek alevin üst noktasına sık", 
-            "Pimi çek tetiğe bas ve alevin tepe noktasına müdahale et", 
-            "Rüzgarı arkana al köpüğü alevin kaynağı yerine dumanın üstüne sık", 
-            "Rüzgarı arkana al pimi çek alevin merkezine doğru süpürerek sık"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Elektrik dağıtım panolarının ön kısımlarının sürekli boş tutulmasının temel sebebi nedir?", 
-        options: [
-            "Panonun havalandırmasını sağlamak ve aşırı ısınmayı önlemek", 
-            "Kablo bağlantılarının dışarıdan daha düzenli görünmesini sağlamak", 
-            "Yalnızca şebeke dağıtım şirketi yetkililerinin bakım yapabilmesi için alan yaratmak", 
-            "Olası acil durumlarda enerji kesme işlemine hızlı müdahale edilebilmesi ve yalıtkan paspas kullanım alanı bırakılması"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Zeminde bulunan sarı siyah verev çizgili bant işaretlemeleri neyi gösterir?", 
-        options: [
-            "Güvenli yaya yürüme yolunu", 
-            "Bitmiş ürün depolama alanını", 
-            "Acil durum toplanma bölgesi sınırlarını", 
-            "Yükseklik farkı takılma riski veya tehlikeli alan sınırını"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Çalışma alanındaki uzatma kablolarının yerde düzensiz ve dağınık bırakılması birincil olarak hangi riski oluşturur?", 
-        options: [
-            "Yalnızca tesis içi görüntü kirliliği ve 5S uygunsuzluğu", 
-            "Elektrik akımında dalgalanma ve voltaj düşümü", 
-            "Bağlı bulunan makinenin üretim performansında azalma", 
-            "Takılma düşme ve kablo izolasyon hasarına bağlı elektrik çarpması riski"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "El bölgesinde meydana gelen derin bir kesik sonrası sahada ilk yapılması gereken müdahale nedir?", 
-        options: [
-            "Kanayan bölgeyi kalp seviyesinden aşağıda tutarak pıhtılaşmayı beklemek", 
-            "Yarayı tazyikli endüstriyel suyla yıkayıp yara bandı yapıştırarak çalışmaya geri dönmek", 
-            "Yaraya antiseptik solüsyon döküp yeni bir iş eldiveni giymek", 
-            "Temiz bir bezle veya sargı ile yara üzerine doğrudan baskı uygulayarak kanamayı durdurmak ve derhal revire gitmek"
-        ], 
-        correctAnswer: 3 
-    },
-    { 
-        question: "Çalışanların iş sağlığı ve güvenliği temel eğitimlerine katılım zorunluluğu yasal mevzuata göre nasıldır?", 
-        options: [
-            "Sadece mesleki yeterlilik belgesi almak isteyenler için seçmeli bir eğitimdir", 
-            "Yalnızca çok tehlikeli sınıfta yer alan ağır sanayi işyerleri için zorunludur", 
-            "Çalışanın yıllık performans değerlendirme sonucuna göre insan kaynakları tarafından belirlenir", 
-            "İlgili kanun gereği ayrım gözetmeksizin tüm çalışanlar için katılımı yasal bir zorunluluktur"
-        ], 
-        correctAnswer: 3 
-    }
-];
+        const soruHavuzu = [
+            { 
+                question: "Atölyede yerde yağ veya sıvı birikintisi gördünüz. İlk yapılması gereken nedir?", 
+                options: [
+                    "Alanı güvenlik şeridi ile izole edip durumu derhal yetkili amire bildirmek", 
+                    "Temizlik personeli gelene kadar alanda beklemek", 
+                    "Sıvının üzerine talaş dökerek çalışmaya devam etmek", 
+                    "Vardiya teslim defterine not düşmek"
+                ], 
+                correctAnswer: 0 
+            },
+            { 
+                question: "Bakım veya onarım sırasında makinenin enerjisini kesip tekrar çalıştırılmasını engellemek için kullanılan sisteme ne ad verilir?", 
+                options: [
+                    "FMEA analiz sistemi", 
+                    "HAZOP değerlendirmesi", 
+                    "5S standart düzenlemesi", 
+                    "LOTO Prosedürü"
+                ], 
+                correctAnswer: 3 
+            },
+            { 
+                question: "Herhangi bir yaralanma veya hasar ile sonuçlanmayan ancak potansiyel tehlike barındıran olaya ne denir?", 
+                options: [
+                    "Güvensiz Durum", 
+                    "İş Kazası", 
+                    "Ramakkala", 
+                    "Güvensiz Davranış"
+                ], 
+                correctAnswer: 2 
+            },
+            { 
+                question: "İş sağlığı ve güvenliği işaretlemelerinde mavi daire zemin üzerine beyaz piktogram neyi ifade eder?", 
+                options: [
+                    "Kişisel koruyucu donanım kullanım zorunluluğu veya mecburi eylem", 
+                    "Özel tehlike uyarısı", 
+                    "Acil durum tahliye yönlendirmesi", 
+                    "Yangınla mücadele ekipmanı yerleşimi"
+                ], 
+                correctAnswer: 0 
+            },
+            { 
+                question: "Tavan vinci veya caraskal ile ağır yük kaldırılırken güvenlik gereği yükün altında veya etki alanında kimler bulunabilir?", 
+                options: [
+                    "Sadece sapanlama işlemini yapan operatör yardımcısı", 
+                    "Yük salınımını engellemek için yükü eliyle destekleyen personel", 
+                    "Hiç kimse bulunmamalıdır", 
+                    "Yalnızca baret takılı olan İSG uzmanı veya vardiya amiri"
+                ], 
+                correctAnswer: 2 
+            },
+            { 
+                question: "Acil durum tahliyesindeki zorlukları ve genel iş kazası olasılığını artıran temel uygunsuzluk nedir?", 
+                options: [
+                    "LOTO Prosedürünün uygulanmaması", 
+                    "Hareketli bölgelere erişim", 
+                    "5S Düzensizliği", 
+                    "Kişisel Koruyucu Donanım Kullanmama"
+                ], 
+                correctAnswer: 2 
+            },
+            { 
+                question: "Dönen veya hareketli makine parçalarında fiziksel koruyucu sökülmüşse hangi işlem uygulanır?", 
+                options: [
+                    "Sensörler aktif konumdaysa çalışmaya devam edilir", 
+                    "Yalnızca yetkili operatör bu şekilde üretime devam edebilir", 
+                    "Makine kesinlikle çalıştırılmaz ve durum bakım birimine bildirilir", 
+                    "Tezgah daha düşük devirde kontrollü çalıştırılır"
+                ], 
+                correctAnswer: 2 
+            },
+            { 
+                question: "İş sağlığı ve güvenliği işaretlemelerinde kırmızı renk genel olarak neyi ifade eder?", 
+                options: [
+                    "Uyarı ve potansiyel tehlike", 
+                    "Zorunluluk ve kişisel koruyucu donanım kullanımı", 
+                    "Yasaklama ve yangınla mücadele ekipmanı konumu", 
+                    "Acil çıkış ve ilk yardım istasyonu"
+                ], 
+                correctAnswer: 2 
+            },
+            { 
+                question: "Zeminde bulunan sarı siyah verev çizgili bant/boya işaretlemeleri neyi gösterir?", 
+                options: [
+                    "Güvenli yaya yürüme yolunu", 
+                    "Bitmiş ürün depolama alanını", 
+                    "Acil durum toplanma bölgesi sınırlarını", 
+                    "Tehlikeli alan sınırını"
+                ], 
+                correctAnswer: 3 
+            },
+            { 
+                question: "Oyak Horse iş güvenliği sloganı aşağıdakilerden hangisidir?", 
+                options: [
+                    "Önce Sen", 
+                    "Güvenli Gelecek", 
+                    "İş Güvenliği Seninle Başlar", 
+                    "Birlikte daha güvenli"
+                ], 
+                correctAnswer: 2 
+            }
+        ];
+
         let state = { currentUser: "", currentDept: "", index: 0, score: 0, currentSet: [], records: [], selectedIndex: null, startTime: 0, duration: 0 };
         let timerInterval = null;
 
@@ -672,7 +373,7 @@
             state.records.push(record);
             document.getElementById('final-score').innerText = `${state.score} / ${state.currentSet.length}`;
             document.getElementById('final-time').innerText = `Süre: ${fmt(state.duration)}`;
-            document.getElementById('result-message').innerText = state.score === state.currentSet.length ? "Tam puan. Sıralamadaki yerinizi süreniz belirleyecek." : (state.score >= 6 ? "İyi seviye. Tam puan için talimatları tekrar gözden geçirin." : "İş güvenliği talimatlarını tekrar incelemeniz tavsiye edilir.");
+            document.getElementById('result-message').innerText = state.score === state.currentSet.length ? "Tam puan. Sıralamadaki yerinizi süreniz belirleyecek." : (state.score >= 8 ? "İyi seviye. Tam puan için talimatları tekrar gözden geçirin." : "İş güvenliği talimatlarını tekrar incelemeniz tavsiye edilir.");
             showScreen('screen-result');
 
             try {
@@ -729,7 +430,6 @@
             monthSelect.value = currentVal;
         }
 
-        // Once skor (yuksek -> dusuk), esitlikte sure (kisa -> uzun); suresi olmayan en sona
         function rankSort(a, b) {
             if (Number(b.score) !== Number(a.score)) return Number(b.score) - Number(a.score);
             const da = (a.duration === "" || a.duration === null || a.duration === undefined) ? Infinity : Number(a.duration);
@@ -745,7 +445,6 @@
             if (fMonth) filtered = filtered.filter(r => r.date && (String(r.date).includes(`.${fMonth}`) || String(r.date).includes(`/${fMonth}`)));
             if (fDept) filtered = filtered.filter(r => r.dept === fDept);
 
-            // Departman ozeti
             const deptMap = {};
             filtered.forEach(r => {
                 if (!deptMap[r.dept]) deptMap[r.dept] = { sum: 0, count: 0, durSum: 0, durCount: 0 };
@@ -762,7 +461,6 @@
                 dBody.innerHTML += `<tr><td class="p-2 text-slate-800 font-semibold">${d}</td><td class="p-2 text-center text-slate-600">${o.count}</td><td class="p-2 text-right font-bold text-slate-800">${avg}</td><td class="p-2 text-right text-slate-600">${avgDur}</td></tr>`;
             });
 
-            // Bireysel siralama
             const sorted = [...filtered].sort(rankSort);
             const uBody = document.getElementById('user-stats-body'); uBody.innerHTML = '';
             sorted.slice(0, 100).forEach((r, idx) => {
