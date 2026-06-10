@@ -1,371 +1,72 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Safety Quiz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; overflow: hidden; touch-action: manipulation; -webkit-font-smoothing: antialiased; }
-        .hidden { display: none !important; }
-        .option-btn:disabled { cursor: not-allowed; }
-        .selected-option { border-color: #2563eb !important; background-color: #eff6ff !important; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1) !important; color: #1e3a8a !important; }
-        .correct-answer { background-color: #22c55e !important; color: white !important; border-color: #22c55e !important; box-shadow: none !important; }
-        .wrong-answer { background-color: #ef4444 !important; color: white !important; border-color: #ef4444 !important; box-shadow: none !important; opacity: 0.8; }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-    </style>
-</head>
-<body class="flex flex-col items-center justify-center h-[100dvh] w-full text-slate-800 m-0 p-0 sm:p-4 bg-gradient-to-br from-slate-100 to-slate-200">
+// OYAK HORSE - İş Güvenliği Test / Apps Script
+// Sheet: 1y9dXDqH0elwlPKrhmYWZq6sbLerPXQ_UlEr1jXgYM1I
+// Kolon sirasi: name | sicil | score | date | duration
 
-    <div id="app" class="w-full h-full sm:h-[95vh] max-w-xl bg-white sm:rounded-2xl shadow-2xl flex flex-col border border-slate-200 overflow-hidden relative">
+const SHEET_ID = "1y9dXDqH0elwlPKrhmYWZq6sbLerPXQ_UlEr1jXgYM1I";
+const SHEET_NAME = "Kayitlar";
 
-        <div class="bg-yellow-400 text-black py-3 px-4 text-center shrink-0 shadow-sm z-10">
-            <img id="brand-logo" src="horse.png" alt="OYAK HORSE" class="hidden h-8 mx-auto object-contain" />
-            <h1 id="brand-fallback" class="text-lg font-extrabold tracking-tight text-black leading-tight">OYAK HORSE</h1>
-            <p id="header-subtitle" class="text-black text-[10px] font-bold tracking-[0.2em] opacity-75 uppercase leading-tight mt-0.5">Safety Quız</p>
-        </div>
+function getSheet() {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  let sheet = ss.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_NAME);
+    sheet.appendRow(["name", "sicil", "score", "date", "duration"]);
+  }
+  // Sicil sutununu (B) bastan asagi metin formatina zorla ki bastaki 0 silinmesin
+  sheet.getRange("B:B").setNumberFormat("@");
+  return sheet;
+}
 
-        <div class="p-3 sm:p-5 flex-grow flex flex-col bg-slate-50/50 min-h-0">
-            <div id="screen-login" class="flex flex-col justify-center h-full max-w-sm mx-auto w-full overflow-y-auto">
-                <div class="text-center mb-6">
-                    <h2 class="text-lg font-bold text-slate-800 mb-1">Teste başlamak için bilgilerinizi giriniz</h2>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="user-name">Ad Soyad</label>
-                    <input type="text" id="user-name" class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 bg-white focus:outline-none focus:border-yellow-500 transition-colors text-sm font-medium shadow-sm" placeholder="Tam adınızı giriniz">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5" for="user-sicil">Sicil No</label>
-                    <input type="text" inputmode="numeric" id="user-sicil" class="w-full border-2 border-slate-200 rounded-xl px-3 py-3 bg-white focus:outline-none focus:border-yellow-500 transition-colors text-sm font-medium shadow-sm" placeholder="Sicil numaranızı giriniz">
-                </div>
-                <div id="login-error" class="text-red-500 text-xs mb-4 hidden font-semibold text-center bg-red-50 p-2 rounded-lg border border-red-100">Lütfen tüm alanları doldurunuz.</div>
-                <div class="space-y-2 mt-auto">
-                    <button id="btn-start" class="w-full bg-yellow-400 text-black font-bold py-3.5 rounded-xl shadow-lg text-sm">Teste Başla</button>
-                    <button id="btn-stats-login" class="w-full bg-white border-2 border-slate-200 text-slate-600 font-bold py-3.5 rounded-xl text-sm">İstatistikler</button>
-                </div>
-            </div>
+// Kayit ekleme (HTML finish() -> POST)
+function doPost(e) {
+  try {
+    const sheet = getSheet();
+    const data = JSON.parse(e.postData.contents);
+    sheet.appendRow([
+      data.name || "",
+      "",  // sicil asagida metin olarak yazilacak
+      data.score || 0,
+      data.date || "",
+      (data.duration === 0 || data.duration) ? data.duration : ""
+    ]);
+    // Sicili son satira metin olarak yaz (0176 gibi degerler korunur)
+    const last = sheet.getLastRow();
+    sheet.getRange(last, 2).setNumberFormat("@").setValue(String(data.sicil || ""));
 
-            <div id="screen-quiz" class="hidden flex flex-col h-full justify-between">
-                <div class="shrink-0 mb-1">
-                    <div class="flex justify-between items-center gap-1 mb-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                        <span id="question-counter" class="bg-white px-2 py-0.5 rounded-full shadow-sm border border-slate-100"></span>
-                        <span id="timer-display" class="bg-white px-2 py-0.5 rounded-full shadow-sm border border-slate-100 text-blue-700"></span>
-                        <span id="score-display" class="bg-white px-2 py-0.5 rounded-full shadow-sm border border-slate-100 text-yellow-600"></span>
-                    </div>
-                    <div class="w-full bg-slate-200 h-1 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="bg-yellow-400 h-full rounded-full transition-all duration-500 ease-out"></div>
-                    </div>
-                </div>
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "ok" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "error", message: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
-                <h2 id="question-text" class="text-sm sm:text-base font-bold my-3 text-center text-slate-800 leading-snug shrink-0 px-1"></h2>
-
-                <div id="options-container" class="grid grid-cols-1 gap-2 w-full shrink-0"></div>
-
-                <div class="mt-auto pt-2 shrink-0">
-                    <button id="confirm-btn" class="hidden w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Cevabı Onayla</button>
-                    <button id="next-btn" class="hidden w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm uppercase tracking-wide">Sıradaki Soru</button>
-                </div>
-            </div>
-
-            <div id="screen-result" class="hidden text-center flex flex-col justify-center h-full">
-                <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mb-1">Test Tamamlandı</h2>
-                <div class="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-yellow-500 to-yellow-400 my-3 drop-shadow-sm" id="final-score"></div>
-                <div id="final-time" class="text-base font-extrabold text-blue-700 mb-3"></div>
-                <p id="result-message" class="mb-6 text-slate-600 font-medium text-sm px-2"></p>
-                <div class="flex flex-col gap-2 mt-auto max-w-sm mx-auto w-full">
-                    <button id="btn-stats-result" class="bg-slate-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm">Verileri Görüntüle</button>
-                    <button id="btn-reset-result" class="bg-white border-2 border-slate-200 text-slate-700 font-bold py-3.5 rounded-xl text-sm">Yeni Katılımcı</button>
-                </div>
-            </div>
-
-            <div id="screen-stats" class="hidden flex flex-col h-full">
-                <div class="flex items-center justify-between mb-2 border-b border-slate-200 pb-2 shrink-0">
-                    <h2 class="text-base font-extrabold text-slate-800">Sıralama</h2>
-                    <button id="btn-close-stats" class="text-slate-400 hover:text-slate-700 font-bold bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-xs">Kapat</button>
-                </div>
-                <div id="loading-container" class="hidden flex-col items-center justify-center py-6 shrink-0">
-                    <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-500 mb-2"></div>
-                    <p id="loading-text" class="text-xs font-medium text-slate-500">Veriler sunucudan çekiliyor...</p>
-                </div>
-                <div class="flex gap-2 mb-2 shrink-0">
-                    <div class="relative w-full">
-                        <select id="filter-month" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-xs focus:outline-none focus:border-yellow-500 bg-white font-medium shadow-sm appearance-none">
-                            <option value="">Tüm Aylar</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500"><svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg></div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm flex-grow overflow-hidden flex flex-col min-h-0">
-                    <div class="overflow-y-auto flex-grow">
-                        <table class="w-full text-[10px] sm:text-xs">
-                            <thead class="bg-slate-50 border-b border-slate-200 sticky top-0 z-10"><tr class="text-slate-500 text-left uppercase tracking-wider font-bold"><th class="p-2 text-center">#</th><th class="p-2">İsim</th><th class="p-2">Sicil</th><th class="p-2 text-center">Skor</th><th class="p-2 text-right">Süre</th></tr></thead>
-                            <tbody id="user-stats-body" class="divide-y divide-slate-100"></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="mt-2 flex flex-col gap-1.5 shrink-0 pt-2 border-t border-slate-200">
-                    <button id="btn-export" class="w-full bg-slate-800 text-white font-bold py-2.5 rounded-xl shadow-md text-xs flex items-center justify-center gap-2">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> CSV İndir
-                    </button>
-                    <button id="btn-clear" class="text-red-500 font-semibold text-[10px] py-1.5">Sıfırla</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyzEzRZbe8PI27krTyl0GiVB6XZ9DDe2B7IcY4jbw3wVlRP2JTOPCXwZ30uI9jNG3lJ/exec";
-        const QUESTION_COUNT = 10;
-
-        const soruHavuzu = [
-            { question: "Atölyede yerde yağ veya sıvı birikintisi gördünüz. İlk yapılması gereken nedir?", options: ["Alanı güvenlik şeridi ile izole edip durumu derhal yetkili amire bildirmek", "Temizlik personeli gelene kadar alanda beklemek", "Sıvının üzerine talaş dökerek çalışmaya devam etmek", "Vardiya teslim defterine not düşmek"], correctAnswer: 0 },
-            { question: "Bakım veya onarım sırasında makinenin enerjisini kesip tekrar çalıştırılmasını engellemek için kullanılan sisteme ne ad verilir?", options: ["FMEA analiz sistemi", "HAZOP değerlendirmesi", "5S standart düzenlemesi", "LOTO Prosedürü"], correctAnswer: 3 },
-            { question: "Herhangi bir yaralanma veya hasar ile sonuçlanmayan ancak potansiyel tehlike barındıran olaya ne denir?", options: ["Güvensiz Durum", "Ramakkala", "İş Kazası", "Güvensiz Davranış"], correctAnswer: 1 },
-            { question: "İş sağlığı ve güvenliği işaretlemelerinde mavi daire zemin üzerine beyaz piktogram neyi ifade eder?", options: ["Kişisel koruyucu donanım kullanım zorunluluğu veya mecburi eylem", "Özel tehlike uyarısı", "Acil durum tahliye yönlendirmesi", "Yangınla mücadele ekipmanı yerleşimi"], correctAnswer: 0 },
-            { question: "Tavan vinci veya caraskal ile ağır yük kaldırılırken güvenlik gereği yükün altında veya etki alanında kimler bulunabilir?", options: ["Sadece sapanlama işlemini yapan operatör yardımcısı", "Hiç kimse bulunmamalıdır", "Yük salınımını engellemek için yükü eliyle destekleyen personel", "Yalnızca baret takılı olan İSG uzmanı veya vardiya amiri"], correctAnswer: 1 },
-            { question: "Acil durum tahliyesindeki zorlukları ve genel iş kazası olasılığını artıran temel uygunsuzluk nedir?", options: ["LOTO Prosedürünün uygulanmaması", "Hareketli bölgelere erişim", "5S Düzensizliği", "Kişisel Koruyucu Donanım Kullanmama"], correctAnswer: 2 },
-            { question: "Dönen veya hareketli makine parçalarında fiziksel koruyucu sökülmüşse hangi işlem uygulanır?", options: ["Sensörler aktif konumdaysa çalışmaya devam edilir", "Yalnızca yetkili operatör bu şekilde üretime devam edebilir", "Makine kesinlikle çalıştırılmaz ve durum bakım birimine bildirilir", "Tezgah daha düşük devirde kontrollü çalıştırılır"], correctAnswer: 2 },
-            { question: "İş sağlığı ve güvenliği işaretlemelerinde kırmızı renk genel olarak neyi ifade eder?", options: ["Uyarı ve potansiyel tehlike", "Zorunluluk ve kişisel koruyucu donanım kullanımı", "Yasaklama ve yangınla mücadele ekipmanı konumu", "Acil çıkış ve ilk yardım istasyonu"], correctAnswer: 2 },
-            { question: "Zeminde bulunan sarı siyah verev (çapraz) çizgili bant/boya işaretlemeleri neyi gösterir?", options: ["Güvenli yaya yürüme yolunu", "Bitmiş ürün depolama alanını", "Acil durum toplanma bölgesi sınırlarını", "Tehlikeli alan sınırını"], correctAnswer: 3 },
-            { question: "Oyak Horse iş güvenliği sloganı aşağıdakilerden hangisidir?", options: ["Önce Sen", "İş Güvenliği Seninle Başlar", "Güvenli Gelecek", "Birlikte daha güvenli"], correctAnswer: 1 }
-        ];
-
-        let state = { currentUser: "", currentSicil: "", index: 0, score: 0, currentSet: [], records: [], selectedIndex: null, startTime: 0, duration: 0 };
-        let timerInterval = null;
-
-        function fmt(s) {
-            if (s === null || s === undefined || s === "") return "-";
-            s = Number(s);
-            if (isNaN(s)) return "-";
-            const m = Math.floor(s / 60);
-            const sec = s % 60;
-            return m + ":" + String(sec).padStart(2, '0');
-        }
-
-        function showScreen(id) {
-            ['screen-login', 'screen-quiz', 'screen-result', 'screen-stats'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            updateTimerDisplay();
-            timerInterval = setInterval(updateTimerDisplay, 1000);
-        }
-        function updateTimerDisplay() {
-            const el = document.getElementById('timer-display');
-            if (!el) return;
-            const s = Math.floor((Date.now() - state.startTime) / 1000);
-            el.innerText = "Süre: " + fmt(s);
-        }
-
-        function startQuiz() {
-            const name = document.getElementById('user-name').value.trim();
-            const sicil = document.getElementById('user-sicil').value.trim();
-            if (!name || !sicil) { document.getElementById('login-error').classList.remove('hidden'); return; }
-            document.getElementById('login-error').classList.add('hidden');
-            state.currentUser = name; state.currentSicil = sicil; state.index = 0; state.score = 0;
-            state.currentSet = [...soruHavuzu].sort(() => Math.random() - 0.5).slice(0, QUESTION_COUNT);
-            state.startTime = Date.now();
-            startTimer();
-            showScreen('screen-quiz'); renderQuestion();
-        }
-
-        function renderQuestion() {
-            const q = state.currentSet[state.index];
-            state.selectedIndex = null;
-            document.getElementById('question-counter').innerText = `Soru ${state.index + 1} / ${state.currentSet.length}`;
-            document.getElementById('score-display').innerText = `Puan: ${state.score}`;
-            document.getElementById('progress-bar').style.width = `${((state.index + 1) / state.currentSet.length) * 100}%`;
-            document.getElementById('question-text').innerText = q.question;
-            const container = document.getElementById('options-container');
-            container.innerHTML = '';
-            document.getElementById('confirm-btn').classList.add('hidden');
-            document.getElementById('next-btn').classList.add('hidden');
-
-            q.options.forEach((opt, i) => {
-                const b = document.createElement('button');
-                b.className = 'option-btn w-full text-left px-3 py-3 border-2 border-slate-200 rounded-xl font-semibold text-slate-700 shadow-sm transition-all hover:border-yellow-400 text-xs sm:text-sm bg-white leading-tight min-h-[50px] flex items-center';
-                b.innerText = opt;
-                b.onclick = () => handleSelection(i);
-                container.appendChild(b);
-            });
-        }
-
-        function handleSelection(idx) {
-            state.selectedIndex = idx;
-            const btns = document.querySelectorAll('.option-btn');
-            btns.forEach((b, i) => {
-                b.classList.remove('selected-option');
-                if (i === idx) b.classList.add('selected-option');
-            });
-            document.getElementById('confirm-btn').classList.remove('hidden');
-        }
-
-        function confirmAnswer() {
-            if (state.selectedIndex === null) return;
-            const q = state.currentSet[state.index];
-            const correct = state.selectedIndex === q.correctAnswer;
-            const btns = document.querySelectorAll('.option-btn');
-            btns.forEach((b, i) => {
-                b.disabled = true;
-                b.classList.remove('selected-option', 'hover:border-yellow-400');
-                if (i === q.correctAnswer) b.classList.add('correct-answer');
-                else if (i === state.selectedIndex && !correct) b.classList.add('wrong-answer');
-            });
-            if (correct) state.score++;
-            document.getElementById('score-display').innerText = `Puan: ${state.score}`;
-            document.getElementById('confirm-btn').classList.add('hidden');
-            document.getElementById('next-btn').classList.remove('hidden');
-        }
-
-        function nextQuestion() {
-            state.index++;
-            if (state.index < state.currentSet.length) renderQuestion();
-            else finish();
-        }
-
-        async function finish() {
-            clearInterval(timerInterval);
-            state.duration = Math.round((Date.now() - state.startTime) / 1000);
-            const record = { name: state.currentUser, sicil: state.currentSicil, score: state.score, duration: state.duration, date: new Date().toLocaleDateString('tr-TR') };
-            state.records.push(record);
-            document.getElementById('final-score').innerText = `${state.score} / ${state.currentSet.length}`;
-            document.getElementById('final-time').innerText = `Süre: ${fmt(state.duration)}`;
-            document.getElementById('result-message').innerText = state.score === state.currentSet.length ? "Tam puan. Sıralamadaki yerinizi süreniz belirleyecek." : (state.score >= 8 ? "İyi seviye. Tam puan için talimatları tekrar gözden geçirin." : "İş güvenliği talimatlarını tekrar incelemeniz tavsiye edilir.");
-            showScreen('screen-result');
-
-            try {
-                await fetch(API_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(record)
-                });
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        async function showStats() {
-            const pin = prompt("Yönetici Şifresi:");
-            if (pin === "1510") {
-                showScreen('screen-stats');
-                document.getElementById('loading-container').classList.remove('hidden');
-                document.getElementById('loading-container').classList.add('flex');
-                try {
-                    const response = await fetch(API_URL);
-                    state.records = await response.json();
-                } catch (error) {
-                    console.error(error);
-                }
-                document.getElementById('loading-container').classList.add('hidden');
-                document.getElementById('loading-container').classList.remove('flex');
-                updateMonthDropdown();
-                renderStatsTable();
-            } else if (pin !== null) {
-                alert("Hatalı şifre.");
-            }
-        }
-
-        function updateMonthDropdown() {
-            const monthSelect = document.getElementById('filter-month');
-            const currentVal = monthSelect.value;
-            const months = new Set();
-            state.records.forEach(r => {
-                if (r.date) {
-                    const d = String(r.date).split('.');
-                    if (d.length === 3) months.add(`${d[1]}.${d[2]}`);
-                    else {
-                        const d2 = String(r.date).split('/');
-                        if (d2.length === 3) months.add(`${d2[1]}/${d2[2]}`);
-                    }
-                }
-            });
-            monthSelect.innerHTML = '<option value="">Tüm Aylar</option>';
-            Array.from(months).sort().forEach(m => {
-                monthSelect.innerHTML += `<option value="${m}">${m}</option>`;
-            });
-            monthSelect.value = currentVal;
-        }
-
-        function rankSort(a, b) {
-            if (Number(b.score) !== Number(a.score)) return Number(b.score) - Number(a.score);
-            const da = (a.duration === "" || a.duration === null || a.duration === undefined) ? Infinity : Number(a.duration);
-            const db = (b.duration === "" || b.duration === null || b.duration === undefined) ? Infinity : Number(b.duration);
-            return da - db;
-        }
-
-        function renderStatsTable() {
-            const fMonth = document.getElementById('filter-month').value;
-
-            let filtered = state.records;
-            if (fMonth) filtered = filtered.filter(r => r.date && (String(r.date).includes(`.${fMonth}`) || String(r.date).includes(`/${fMonth}`)));
-
-            const sorted = [...filtered].sort(rankSort);
-            const uBody = document.getElementById('user-stats-body'); uBody.innerHTML = '';
-            sorted.slice(0, 100).forEach((r, idx) => {
-                const rank = idx + 1;
-                let rowClass = '';
-                let rankCell = `<span class="text-slate-400 font-bold">${rank}</span>`;
-                if (rank === 1) { rowClass = 'bg-yellow-50'; rankCell = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-yellow-400 text-white font-extrabold">1</span>`; }
-                else if (rank === 2) { rowClass = 'bg-slate-50'; rankCell = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-400 text-white font-extrabold">2</span>`; }
-                else if (rank === 3) { rowClass = 'bg-yellow-50'; rankCell = `<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-yellow-600 text-white font-extrabold">3</span>`; }
-                uBody.innerHTML += `<tr class="${rowClass}"><td class="p-2 text-center">${rankCell}</td><td class="p-2 text-slate-800 font-medium">${r.name}</td><td class="p-2 text-slate-500">${r.sicil || '-'}</td><td class="p-2 text-center font-bold text-slate-800">${r.score}</td><td class="p-2 text-right font-bold text-blue-700">${fmt(r.duration)}</td></tr>`;
-            });
-        }
-
-        function exportData() {
-            const fMonth = document.getElementById('filter-month').value;
-            let filtered = state.records;
-            if (fMonth) filtered = filtered.filter(r => r.date && (String(r.date).includes(`.${fMonth}`) || String(r.date).includes(`/${fMonth}`)));
-            const sorted = [...filtered].sort(rankSort);
-
-            let csv = "Sira;Ad;Sicil;Skor;Sure(sn);Sure;Tarih\n";
-            sorted.forEach((r, i) => { csv += `${i + 1};${r.name};${r.sicil || '-'};${r.score};${r.duration || '-'};${fmt(r.duration)};${r.date || '-'}\n`; });
-            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob); link.download = "oyak_isg_siralama.csv"; link.click();
-        }
-
-        function clearAllData() {
-            alert("Merkezi veritabanı silme işlemi güvenlik sebebiyle yalnızca Google Sheets üzerinden manuel yapılabilir.");
-        }
-
-        function appReset() {
-            document.getElementById('user-name').value = '';
-            document.getElementById('user-sicil').value = '';
-            showScreen('screen-login');
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const on = (id, fn) => { const el = document.getElementById(id); if (el) el.addEventListener('click', fn); };
-            on('btn-start', startQuiz);
-            on('btn-stats-login', showStats);
-            on('confirm-btn', confirmAnswer);
-            on('next-btn', nextQuestion);
-            on('btn-stats-result', showStats);
-            on('btn-reset-result', appReset);
-            on('btn-close-stats', appReset);
-            on('btn-export', exportData);
-            on('btn-clear', clearAllData);
-            const fm = document.getElementById('filter-month');
-            if (fm) fm.addEventListener('change', renderStatsTable);
-
-            // Logo yuklenince yazi yerine logoyu goster
-            const logo = document.getElementById('brand-logo');
-            if (logo) {
-                const swap = () => { logo.classList.remove('hidden'); const fb = document.getElementById('brand-fallback'); if (fb) fb.classList.add('hidden'); };
-                logo.addEventListener('load', swap);
-                if (logo.complete && logo.naturalWidth > 0) swap();
-            }
-        });
-    </script>
-</body>
-</html>
+// Siralama verisi cekme (HTML showStats() -> GET)
+function doGet(e) {
+  try {
+    const sheet = getSheet();
+    const values = sheet.getDataRange().getValues();
+    const records = [];
+    // Ilk satir baslik, atla
+    for (let i = 1; i < values.length; i++) {
+      const row = values[i];
+      if (!row[0]) continue;
+      records.push({
+        name: row[0],
+        sicil: String(row[1]),
+        score: row[2],
+        date: row[3],
+        duration: (row[4] === 0 || row[4]) ? row[4] : ""
+      });
+    }
+    return ContentService
+      .createTextOutput(JSON.stringify(records))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: "error", message: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
