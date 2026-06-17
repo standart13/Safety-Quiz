@@ -136,7 +136,7 @@
             { question: "Oyak Horse iş güvenliği sloganı aşağıdakilerden hangisidir?", options: ["Önce Sen", "İş Güvenliği Seninle Başlar", "Güvenli Gelecek", "Birlikte daha güvenli"], correctAnswer: 1 }
         ];
 
-        let state = { currentUser: "", currentSicil: "", index: 0, score: 0, currentSet: [], records: [], selectedIndex: null, startTime: 0, duration: 0 };
+        let state = { currentUser: "", currentSicil: "", index: 0, score: 0, currentSet: [], records: [], selectedIndex: null, startTime: 0, duration: 0, quizActive: false, submitted: false };
         let timerInterval = null;
 
         function fmt(s) {
@@ -171,6 +171,7 @@
             if (!name || !sicil) { document.getElementById('login-error').classList.remove('hidden'); return; }
             document.getElementById('login-error').classList.add('hidden');
             state.currentUser = name; state.currentSicil = sicil; state.index = 0; state.score = 0;
+            state.submitted = false; state.quizActive = true;
             state.currentSet = [...soruHavuzu].sort(() => Math.random() - 0.5).slice(0, QUESTION_COUNT);
             state.startTime = Date.now();
             startTimer();
@@ -231,7 +232,22 @@
             else finish();
         }
 
+        // Test yarida birakilirsa (sayfa kapatma / yenileme) o ana kadarki skoru gonder
+        function submitPartial() {
+            if (!state.quizActive || state.submitted) return;
+            state.submitted = true; state.quizActive = false;
+            clearInterval(timerInterval);
+            const dur = Math.round((Date.now() - state.startTime) / 1000);
+            const record = { name: state.currentUser, sicil: state.currentSicil, score: state.score, duration: dur, date: new Date().toLocaleDateString('tr-TR') };
+            try {
+                const blob = new Blob([JSON.stringify(record)], { type: 'text/plain;charset=UTF-8' });
+                navigator.sendBeacon(API_URL, blob);
+            } catch (e) { console.error(e); }
+        }
+
         async function finish() {
+            if (state.submitted) { showScreen('screen-result'); return; }
+            state.submitted = true; state.quizActive = false;
             clearInterval(timerInterval);
             state.duration = Math.round((Date.now() - state.startTime) / 1000);
             const record = { name: state.currentUser, sicil: state.currentSicil, score: state.score, duration: state.duration, date: new Date().toLocaleDateString('tr-TR') };
@@ -357,6 +373,9 @@
             on('btn-clear', clearAllData);
             const fm = document.getElementById('filter-month');
             if (fm) fm.addEventListener('change', renderStatsTable);
+
+            // Test yarida kalirsa (kapatma/yenileme) otomatik gonder
+            window.addEventListener('pagehide', submitPartial);
 
             // Logo yuklenince yazi yerine logoyu goster
             const logo = document.getElementById('brand-logo');
